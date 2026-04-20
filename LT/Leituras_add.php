@@ -41,10 +41,19 @@ $sensores = $conn->query("SELECT cod_sensor, nome FROM sensores WHERE ativo = 1 
                     <label for="valor">Valor:</label>
                     <input type="number" step="0.01" id="valor" name="valor" required placeholder="Ex: 23.5">
                 </div>
-
+                <!-- Unidade pode ser algo como °C, %, m, etc.Select -->
+                 
                 <div class="form-group">
                     <label for="unidade">Unidade:</label>
-                    <input type="text" id="unidade" name="unidade" required placeholder="Ex: °C, %, m">
+                    <select id="unidade" name="unidade" required>
+                        <option value="">Selecione a unidade</option>
+                        <option value="°C">°C</option>
+                        <option value="%">%</option>
+                        <option value="cm">cm</option>
+                        <option value="µg/m3">µg/m3</option>
+                        <option value="Lux">Lux</option>
+                        <!-- Adicione outras unidades conforme necessário -->
+                    </select>
                 </div>
 
                 <div class="form-group">

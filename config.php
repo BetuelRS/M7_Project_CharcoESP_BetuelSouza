@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Define a URL base para links (use http:// ou https:// conforme seu ambiente)
-define('BASE_URL', 'http://localhost/M5_Project/');
+define('BASE_URL', 'http://localhost/M7_Project/');
 
 // Define o caminho absoluto no servidor para includes
 define('BASE_PATH', __DIR__ . DIRECTORY_SEPARATOR);
