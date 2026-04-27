@@ -367,6 +367,7 @@
 
 /* Cards padrão */
 .dashboard-card {
+  /*Centralizar os cards em grupos de 2*/
   background: var(--white);
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
@@ -375,6 +376,7 @@
   align-items: center;
   transition: all 0.3s ease;
   border: 1px solid rgba(0, 0, 0, 0.03);
+  position: center;
 }
 
 .dashboard-card:hover {
