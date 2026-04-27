@@ -4,7 +4,6 @@
 require_once __DIR__ . '/config.php';
 include BASE_PATH . 'db.php';
 ?>
-
 <div class="dashboard-grid">
     <!-- Card Total de Sensores -->
     <div class="dashboard-card card-sensors">
@@ -21,6 +20,7 @@ include BASE_PATH . 'db.php';
             <p class="card-value"><?= $total_sensores ?></p>
         </div>
     </div>
+
     <!-- Card da quantidade de leituras hoje -->
     <div class="dashboard-card card-todays-readings">
         <div class="card-icon">
@@ -38,33 +38,6 @@ include BASE_PATH . 'db.php';
             <p class="card-value"><?= $todays_leituras ?></p>
         </div>
     </div>
-        <!-- Card da ultima leitura -->
-    <div class="dashboard-card card-last-reading">
-        <div class="card-icon">
-            <i class="fas fa-clock"></i>
-        </div>
-        <div class="card-content">
-            <h3>Última Leitura</h3>
-            <?php
-            $sql = "SELECT s.tipo AS metrica, l.valor, l.unidade, l.data_hora 
-                    FROM leituras l
-                    INNER JOIN sensores s ON l.cod_sensor = s.cod_sensor
-                    ORDER BY l.data_hora DESC 
-                    LIMIT 1";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0):
-                $last_reading = $result->fetch_assoc();
-                $last_reading_value = htmlspecialchars($last_reading['valor']) . ' ' . htmlspecialchars($last_reading['unidade']);
-                $last_reading_time = date('d/m/Y H:i', strtotime($last_reading['data_hora']));
-            else:
-                $last_reading_value = 'Nenhuma leitura';
-                $last_reading_time = '';
-            endif;
-            ?>
-            <p class="card-value"><?= $last_reading_value ?></p>
-            <p class="card-subvalue"><?= $last_reading_time ?></p>
-        </div>
-    </div>
 
     <!-- Card Total de Leituras -->
 
@@ -80,6 +53,121 @@ include BASE_PATH . 'db.php';
             $total_leituras = ($result->num_rows > 0) ? $result->fetch_assoc()['total_leituras'] : 0;
             ?>
             <p class="card-value"><?= $total_leituras ?></p>
+        </div>
+    </div>
+    <br>
+
+
+    <!--cards da ultima leitura de cada sensor, um card para cada sensor-->
+    <!-- Ultima temperatura -->
+    <div class="dashboard-card">
+        <div class="card-icon">
+            <i class="fas fa-thermometer-half"></i>
+        </div>
+        <div class="card-content">
+            <h3>Temperatura</h3>
+            <?php
+            $sql = "SELECT l.valor, l.unidade, l.data_hora 
+            FROM leituras l
+            INNER JOIN sensores s ON l.cod_sensor = s.cod_sensor
+            WHERE s.tipo = 'Temperatura'
+            ORDER BY l.data_hora DESC 
+            LIMIT 1";
+            $result = $conn->query($sql);
+            $temperatura = ($result->num_rows > 0) ? $result->fetch_assoc() : null;
+            ?>
+            <p class="card-value">
+                <?= $temperatura ? htmlspecialchars($temperatura['valor']) . ' ' . htmlspecialchars($temperatura['unidade']) : 'Nenhuma leitura' ?>
+            </p>
+        </div>
+    </div>
+    <!-- Ultima Luminosidade  -->
+    <div class="dashboard-card">
+        <div class="card-icon">
+            <i class="fas fa-lightbulb"></i>
+        </div>
+        <div class="card-content">
+            <h3>Luminosidade</h3>
+            <?php
+            $sql = "SELECT l.valor, l.unidade, l.data_hora 
+            FROM leituras l
+            INNER JOIN sensores s ON l.cod_sensor = s.cod_sensor
+            WHERE s.tipo = 'Luminosidade'
+            ORDER BY l.data_hora DESC 
+            LIMIT 1";
+            $result = $conn->query($sql);
+            $luminosidade = ($result->num_rows > 0) ? $result->fetch_assoc() : null;
+            ?>
+            <p class="card-value">
+                <?= $luminosidade ? htmlspecialchars($luminosidade['valor']) . ' ' . htmlspecialchars($luminosidade['unidade']) : 'Nenhuma leitura' ?>
+            </p>
+        </div>
+    </div>
+    <!-- Ultima Qualidade do Ar -->
+    <div class="dashboard-card">
+        <div class="card-icon">
+            <i class="fas fa-wind"></i>
+        </div>
+        <div class="card-content">
+            <h3>Qualidade do Ar</h3>
+            <?php
+            $sql = "SELECT l.valor, l.unidade, l.data_hora 
+            FROM leituras l
+            INNER JOIN sensores s ON l.cod_sensor = s.cod_sensor
+            WHERE s.tipo = 'Qualidade do Ar'
+            ORDER BY l.data_hora DESC 
+            LIMIT 1";
+            $result = $conn->query($sql);
+            $qualidade_do_ar = ($result->num_rows > 0) ? $result->fetch_assoc() : null;
+            ?>
+            <p class="card-value">
+                <?= $qualidade_do_ar ? htmlspecialchars($qualidade_do_ar['valor']) . ' ' . htmlspecialchars($qualidade_do_ar['unidade']) : 'Nenhuma leitura' ?>
+            </p>
+        </div>
+    </div>
+
+    <!-- Ultima Nível da Água -->
+    <div class="dashboard-card">
+        <div class="card-icon">
+            <i class="fas fa-tint"></i>
+        </div>
+        <div class="card-content">
+            <h3>Nível da Água</h3>
+            <?php
+            $sql = "SELECT l.valor, l.unidade, l.data_hora 
+            FROM leituras l
+            INNER JOIN sensores s ON l.cod_sensor = s.cod_sensor
+            WHERE s.tipo = 'Nível da Água'
+            ORDER BY l.data_hora DESC 
+            LIMIT 1";
+            $result = $conn->query($sql);
+            $nivel_da_agua = ($result->num_rows > 0) ? $result->fetch_assoc() : null;
+            ?>
+            <p class="card-value">
+                <?= $nivel_da_agua ? htmlspecialchars($nivel_da_agua['valor']) . ' ' . htmlspecialchars($nivel_da_agua['unidade']) : 'Nenhuma leitura' ?>
+            </p>
+        </div>
+    </div>
+    <!-- ultima humidade -->
+    <div class="dashboard-card">
+        <div class="card-icon">
+            <i class="fas fa-tint"></i>
+        </div>
+        <div class="card-content">
+            <h3>Humidade</h3>
+            <?php
+            $sql = "SELECT l.valor, l.unidade, l.data_hora 
+            FROM leituras l
+            INNER JOIN sensores s ON l.cod_sensor = s.cod_sensor
+            WHERE s.tipo = 'Humidade'
+            ORDER BY l.data_hora DESC 
+            LIMIT 1";
+            $result = $conn->query($sql);
+            $humidade = ($result->num_rows > 0) ? $result->fetch_assoc() : null;
+            ?>
+            <p class="card-value">
+                <?= $humidade ? htmlspecialchars($humidade['valor']) . ' ' . htmlspecialchars($humidade['unidade']) : 'Nenhuma leitura' ?>
+            </p>
         </div>
     </div>
 
@@ -110,19 +198,19 @@ include BASE_PATH . 'db.php';
                     $result = $conn->query($sql);
                     if ($result->num_rows > 0):
                         while ($row = $result->fetch_assoc()):
-                    ?>
-                    <tr>
-                        <td><?= htmlspecialchars($row['metrica']) ?></td>
-                        <td><?= htmlspecialchars($row['valor']) ?> <?= htmlspecialchars($row['unidade']) ?></td>
-                        <td><?= date('d/m/Y H:i', strtotime($row['data_hora'])) ?></td>
-                    </tr>
-                    <?php
+                            ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['metrica']) ?></td>
+                                <td><?= htmlspecialchars($row['valor']) ?>         <?= htmlspecialchars($row['unidade']) ?></td>
+                                <td><?= date('d/m/Y H:i', strtotime($row['data_hora'])) ?></td>
+                            </tr>
+                            <?php
                         endwhile;
                     else:
-                    ?>
-                    <tr>
-                        <td colspan="3" class="no-data">Nenhuma leitura encontrada</td>
-                    </tr>
+                        ?>
+                        <tr>
+                            <td colspan="3" class="no-data">Nenhuma leitura encontrada</td>
+                        </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
