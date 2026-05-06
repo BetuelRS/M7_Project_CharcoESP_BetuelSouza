@@ -3,14 +3,17 @@ require_once __DIR__ . '/../config.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - DashBoard ESP</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div class="auth-container">
         <div class="auth-card">
@@ -40,16 +43,14 @@ require_once __DIR__ . '/../config.php';
                     <label for="username">
                         <i class="fas fa-user"></i> Usuário ou Email
                     </label>
-                    <input type="text" name="username" id="username" 
-                           placeholder="Digite seu usuário ou email" required>
+                    <input type="text" name="username" id="username" placeholder="Digite seu usuário ou email" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">
                         <i class="fas fa-lock"></i> Senha
                     </label>
-                    <input type="password" name="password" id="password" 
-                           placeholder="Digite sua senha" required>
+                    <input type="password" name="password" id="password" placeholder="Digite sua senha" required>
                 </div>
 
                 <button type="submit" class="auth-btn">
@@ -63,4 +64,5 @@ require_once __DIR__ . '/../config.php';
         </div>
     </div>
 </body>
+
 </html>

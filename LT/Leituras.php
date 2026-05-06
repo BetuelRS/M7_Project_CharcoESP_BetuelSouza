@@ -10,14 +10,17 @@ if (!isset($_SESSION['user_id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Últimas Leituras</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <header>
         <?php include '../struct/header.php'; ?>
@@ -27,6 +30,7 @@ if (!isset($_SESSION['user_id'])) {
         <h1 class="page-title">Últimas 10 Leituras</h1>
 
         <div class="action-buttons">
+
             <a href="<?= BASE_URL ?>LT/leituras_add.php" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Adicionar Leitura
             </a>
@@ -60,31 +64,31 @@ if (!isset($_SESSION['user_id'])) {
 
                 if ($result->num_rows > 0):
                     while ($row = $result->fetch_assoc()):
-                ?>
-                <tr>
-                    <td><?= $row['cod_leituras'] ?></td>
-                    <td><?= htmlspecialchars($row['sensor_nome']) ?></td>
-                    <td><?= htmlspecialchars($row['valor']) ?></td>
-                    <td><?= htmlspecialchars($row['unidade']) ?></td>
-                    <td><?= date('d/m/Y H:i', strtotime($row['data_hora'])) ?></td>
-                    <td>
-                        <a href="leituras_editar.php?cod_leituras=<?= $row['cod_leituras'] ?>" class="action-link edit">
-                            <i class="fas fa-edit"></i> Editar
-                        </a>
-                        <a href="leituras_excluir.php?cod_leituras=<?= $row['cod_leituras'] ?>" 
-                           class="action-link delete" 
-                           onclick="return confirm('Tem certeza que deseja excluir esta leitura?')">
-                            <i class="fas fa-trash"></i> Excluir
-                        </a>
-                    </td>
-                </tr>
-                <?php
+                        ?>
+                        <tr>
+                            <td><?= $row['cod_leituras'] ?></td>
+                            <td><?= htmlspecialchars($row['sensor_nome']) ?></td>
+                            <td><?= htmlspecialchars($row['valor']) ?></td>
+                            <td><?= htmlspecialchars($row['unidade']) ?></td>
+                            <td><?= date('d/m/Y H:i', strtotime($row['data_hora'])) ?></td>
+                            <td>
+                                <a href="leituras_editar.php?cod_leituras=<?= $row['cod_leituras'] ?>" class="action-link edit">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                <a href="leituras_excluir.php?cod_leituras=<?= $row['cod_leituras'] ?>"
+                                    class="action-link delete"
+                                    onclick="return confirm('Tem certeza que deseja excluir esta leitura?')">
+                                    <i class="fas fa-trash"></i> Excluir
+                                </a>
+                            </td>
+                        </tr>
+                        <?php
                     endwhile;
                 else:
-                ?>
-                <tr>
-                    <td colspan="6" class="no-data">Nenhuma leitura encontrada</td>
-                </tr>
+                    ?>
+                    <tr>
+                        <td colspan="6" class="no-data">Nenhuma leitura encontrada</td>
+                    </tr>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -94,4 +98,5 @@ if (!isset($_SESSION['user_id'])) {
         <?php include '../struct/footer.php'; ?>
     </footer>
 </body>
+
 </html>
