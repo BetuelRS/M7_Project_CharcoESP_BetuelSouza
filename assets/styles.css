@@ -97,10 +97,39 @@
 }
 
 /* Responsividade */
-@media (max-width: 768px) {
-  .footer-container {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 640px) {
+  .filters-grid {
+    grid-template-columns: 1fr;
   }
+  .filter-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Form validation styles */
+.form-error {
+  color: #c62828;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  min-height: 18px;
+  display: block;
+}
+
+input.valid {
+  border-color: #4caf50 !important;
+}
+
+input.invalid {
+  border-color: #f44336 !important;
+}
+
+input:focus.valid {
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.25) !important;
+}
+
+input:focus.invalid {
+  box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.25) !important;
 }
 
 @media (max-width: 480px) {
@@ -964,6 +993,25 @@
 .action-link.delete:hover {
   background-color: #c62828;
   color: white;
+}
+
+/* Alerts */
+.alert {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.alert-success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
 }
 
 /* Formulários */

@@ -13,6 +13,7 @@ $sensores = $conn->query("SELECT cod_sensor, nome FROM sensores WHERE ativo = 1 
     <title>Adicionar Leitura</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="<?= BASE_URL ?>assets/form-validation.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -23,8 +24,22 @@ $sensores = $conn->query("SELECT cod_sensor, nome FROM sensores WHERE ativo = 1 
     <main class="readings-container">
         <h1 class="page-title">Nova Leitura</h1>
 
+        <?php if (isset($_GET['erro']) && $_GET['erro'] === 'validacao' && isset($_SESSION['erros_validacao'])): ?>
+            <div class="form-container" style="margin-bottom: 1rem;">
+                <div class="alert alert-error">
+                    <strong>Erros de validação:</strong>
+                    <ul style="margin: 0.5rem 0 0 1rem;">
+                        <?php foreach ($_SESSION['erros_validacao'] as $erro): ?>
+                            <li><?= htmlspecialchars($erro) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
+            <?php unset($_SESSION['erros_validacao']); ?>
+        <?php endif; ?>
+
         <div class="form-container">
-            <form action="Leituras_add_process.php" method="post">
+            <form action="Leituras_add_process.php" method="post" class="readings-form">
                 <div class="form-group">
                     <label for="cod_sensor">Sensor:</label>
                     <select name="cod_sensor" id="cod_sensor" required>
