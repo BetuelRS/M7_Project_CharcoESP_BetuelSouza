@@ -15,6 +15,7 @@
         <nav class="main-nav" id="mainNav">
             <ul class="nav-list">
                 <li><a href="<?= BASE_URL ?>index.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">Home</a></li>
+                <li><a href="<?= BASE_URL ?>Palmela/index.php" class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'Palmela/') !== false ? 'active' : '' ?>"><i class="fas fa-cloud-sun"></i> Palmela</a></li>
                 
 <?php if (isset($_SESSION['user_id'])): ?>
                         <li><a href="<?= BASE_URL ?>LT/Leituras.php" class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'Leituras.php') !== false ? 'active' : '' ?>">Leituras</a></li>

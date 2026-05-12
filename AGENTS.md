@@ -12,14 +12,16 @@
 
 ## PHP Architecture
 - **Always** `require_once __DIR__ . '/config.php'` first (starts session, defines `BASE_URL`/`BASE_PATH`)
-- Auth: `$_SESSION['user_id']` for login, `$_SESSION['user_admin']` for admin check
-- Database: mysqli directly (no ORM). Include `db.php` after `config.php`
+- Process/CRUD files then include `db.php` via `BASE_PATH . 'db.php'` (not `__DIR__`)
+- Auth: `$_SESSION['user_id']` for login, `$_SESSION['user_admin']` for admin (both required for admin pages)
+- Database: mysqli directly (no ORM)
+- `preferencias` column in `utilizadores` is JSON
 
 ## Directories
 | Dir | Purpose |
 |-----|---------|
 | `auth/` | Login, register, logout, password recovery, perfil |
-| `Admin/` | User management (requires admin session) |
+| `Admin/` | User management (requires admin session - checks both `user_id` AND `user_admin`) |
 | `LT/` | Readings (leituras) - list, add, edit, delete |
 | `SN/` | Sensors (sensores) - list, add, edit, delete |
 | `RT/` | Reports (relatórios) - download CSV/JSON exports |
