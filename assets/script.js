@@ -1,11 +1,11 @@
 // assets/script.js
 // 1. Centralized Threshold System
 const thresholds = {
-  temperatura: { min: 0, max: 30, unit: "°C", label: "Temperatura" },
-  humidade: { min: 20, max: 80, unit: "%", label: "Humidade" },
-  luminosidade: { min: 100, max: 900, unit: "lux", label: "Luminosidade" },
-  qualidade_do_ar: { min: 0, max: 40, unit: "µg/m3", label: "Partículas" },
-  nivel_agua: { min: 15, max: 60, unit: "cm", label: "Nível da Água" },
+  temperatura: { min: 15, max: 35, unit: "°C", label: "Temperatura" },
+  humidade: { min: 40, max: 80, unit: "%", label: "Humidade" },
+  luminosidade: { min: 0, max: 50000, unit: "lux", label: "Luminosidade" },
+  qualidade_do_ar: { min: 0, max: 50, unit: "µg/m3", label: "Partículas" },
+  nivel_agua: { min: 10, max: null, unit: "cm", label: "Nível da Água" },
   // Extend here...
 };
 
@@ -120,21 +120,25 @@ function monitor() {
     let alertMsg = "";
     let color = "#ccffcc";
 
-    if (r.value > max) {
+    // Verifica limite máximo (se existir)
+    if (max !== null && r.value > max) {
       status = "high";
       color = "#ffcccc";
       alertMsg = `⚠️ ALERTA: ${label} acima do máximo (${r.value}${unit} > ${max}${unit})`;
-    } else if (r.value < min) {
+    } 
+    // Verifica limite mínimo (se existir)
+    else if (min !== null && r.value < min) {
       status = "low";
-      color = "#ffd9b3";
-      alertMsg = `⚠️ ALERTA: ${label} abaixo do mínimo (${r.value}${unit} < ${min}${unit})`;
-      if (r.key === "humidade" && r.value < 20) {
-        alertMsg = "⚠️ WARNING: Risco de seca";
-        color = "#ffe082";
-      }
       if (r.key === "nivel_agua") {
         alertMsg = `⚠️ ALERTA: Nível da água crítico (${r.value}${unit})`;
         color = "#e57373";
+      } else {
+        color = "#ffd9b3";
+        alertMsg = `⚠️ ALERTA: ${label} abaixo do mínimo (${r.value}${unit} < ${min}${unit})`;
+      }
+      if (r.key === "humidade" && r.value < 20) {
+        alertMsg = "⚠️ WARNING: Risco de seca";
+        color = "#ffe082";
       }
     }
 

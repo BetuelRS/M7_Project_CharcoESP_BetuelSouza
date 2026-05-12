@@ -39,8 +39,10 @@ if (!empty($errors)) {
 }
 
 
+$password_hash = password_hash($password, PASSWORD_DEFAULT);
+
 $stmt = $conn->prepare("INSERT INTO utilizadores (nome_completo, username, email, password, ADMIN) VALUES (?, ?, ?, ?, 0)");
-$stmt->bind_param("ssss", $nome_completo, $username, $email, $password);
+$stmt->bind_param("ssss", $nome_completo, $username, $email, $password_hash);
 
 if ($stmt->execute()) {
     $_SESSION['register_success'] = 'Conta criada com sucesso! Faça login.';

@@ -1,0 +1,35 @@
+# PHP / Web App
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Uploads (if any)
+uploads/
+media/
+
+# Logs
+logs/
+*.log
+
+# Environment files (sensitive)
+.env
+.env.*
+!.env.example
+
+# Database credentials (if local)
+db_credentials.php
+config_local.php
+
+# Compiled/Generated
+*.php~
+
+# OS
+Thumbs.db
+
+#Agentes
+AGENTS.md

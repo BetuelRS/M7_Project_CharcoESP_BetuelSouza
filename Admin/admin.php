@@ -1,6 +1,12 @@
 <!-- Pagina de administração Gerir usuarios -->
 <?php
 require_once __DIR__ . '/../config.php';
+
+if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
+    header('Location: ' . BASE_URL . 'index.php?erro=admin');
+    exit();
+}
+
 include BASE_PATH . 'db.php';
 ?>
 <!DOCTYPE html>
@@ -25,7 +31,6 @@ include BASE_PATH . 'db.php';
                 <tr>
                     <th>Codigo</th>
                     <th>Username</th>
-                    <th>Password</th>
                     <th>Email</th>
                     <th>Nome Completo</th>
                     <th>Admin</th>
@@ -34,16 +39,14 @@ include BASE_PATH . 'db.php';
             </thead>
             <tbody>
                 <?php
-                include BASE_PATH . 'db.php';
-                $result = $conn->query("SELECT cod_utilizador, username, password, email, nome_completo, ADMIN FROM utilizadores");
+                $result = $conn->query("SELECT cod_utilizador, username, email, nome_completo, ADMIN FROM utilizadores");
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>";
-                    echo "<td>{$row['cod_utilizador']}</td>";
-                    echo "<td>{$row['username']}</td>";
-                    echo "<td>{$row['password']}</td>";
-                    echo "<td>{$row['email']}</td>";
-                    echo "<td>{$row['nome_completo']}</td>";
-                    echo "<td>{$row['ADMIN']}</td>";
+                    echo "<td>" . htmlspecialchars($row['cod_utilizador']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['username']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['nome_completo']) . "</td>";
+                    echo "<td>" . ($row['ADMIN'] ? 'Sim' : 'Não') . "</td>";
                     echo "<td><a href='" . BASE_URL . "Admin/utilizadores_edit.php?id={$row['cod_utilizador']}' class='admin-action-btn'>Editar</a> ";
                     echo "<a href='" . BASE_URL . "Admin/utilizadores_delete.php?id={$row['cod_utilizador']}' class='admin-action-btn btn-danger' onclick='return confirm(\"Tem certeza que deseja excluir este utilizador?\")'>Excluir</a></td>";
                     echo "</tr>";

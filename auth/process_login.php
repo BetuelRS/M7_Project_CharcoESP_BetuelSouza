@@ -25,11 +25,27 @@ $result = $stmt->get_result();
 
 if ($result->num_rows === 1) {
     $user = $result->fetch_assoc();
-    if ($password === $user['password']) {
+    $senha_valida = false;
+    
+    if (password_get_info($user['password'])['algo'] !== 0) {
+        $senha_valida = password_verify($password, $user['password']);
+    } else {
+        $senha_valida = ($password === $user['password']);
+    }
+    
+    if ($senha_valida) {
+        // Migra password para hash se ainda for texto plano
+        if (password_get_info($user['password'])['algo'] === 0) {
+            $hashed = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("UPDATE utilizadores SET password = ? WHERE cod_utilizador = ?");
+            $stmt->bind_param("si", $hashed, $user['cod_utilizador']);
+            $stmt->execute();
+        }
+
         // Login bem-sucedido
         $_SESSION['user_id'] = $user['cod_utilizador'];
         $_SESSION['user_name'] = $user['nome_completo'] ?: $user['username'];
-        $_SESSION['user_admin'] = $user['ADMIN'];
+        $_SESSION['user_admin'] = (int)$user['ADMIN'];
         
         header('Location: ' . BASE_URL . 'index.php');
         exit();

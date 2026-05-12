@@ -1,24 +1,36 @@
 <!-- editar e atualizar utilizador -->
 <?php
 require_once __DIR__ . '/../config.php';
+
+if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
+    header('Location: ' . BASE_URL . 'index.php?erro=admin');
+    exit();
+}
+
 include BASE_PATH . 'db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int)$_POST['id'];
     $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+    $password_input = $_POST['password'];
     $email = trim($_POST['email']);
     $nome_completo = trim($_POST['nome_completo']);
     $admin = isset($_POST['admin']) ? 1 : 0;
 
-    // Validação básica
-    if (empty($username) || empty($password) || empty($email) || empty($nome_completo)) {
+    // Validação básica (password não é obrigatória no edit)
+    if (empty($username) || empty($email) || empty($nome_completo)) {
         header('Location: ' . BASE_URL . 'Admin/utilizadores_edit.php?id=' . $id . '&erro=1');
         exit();
     }
 
-    // Prepared statement 
-    $stmt = $conn->prepare("UPDATE utilizadores SET username = ?, password = ?, email = ?, nome_completo = ?, ADMIN = ? WHERE cod_utilizador = ?");
-    $stmt->bind_param("ssssii", $username, $password, $email, $nome_completo, $admin, $id);
+    // Se password foi alterada, fazer hash; se vazia, manter a atual
+    if (!empty($password_input)) {
+        $password = password_hash($password_input, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("UPDATE utilizadores SET username = ?, password = ?, email = ?, nome_completo = ?, ADMIN = ? WHERE cod_utilizador = ?");
+        $stmt->bind_param("ssssii", $username, $password, $email, $nome_completo, $admin, $id);
+    } else {
+        $stmt = $conn->prepare("UPDATE utilizadores SET username = ?, email = ?, nome_completo = ?, ADMIN = ? WHERE cod_utilizador = ?");
+        $stmt->bind_param("sssii", $username, $email, $nome_completo, $admin, $id);
+    }
 
     if ($stmt->execute()) {
         header('Location: ' . BASE_URL . 'Admin/admin.php?msg=atualizado');
@@ -68,7 +80,8 @@ $stmt->close();
 
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" value="<?= htmlspecialchars($user['password']) ?>" required>
+                <input type="password" id="password" name="password" placeholder="Deixe em branco para manter a atual" required>
+                <small style="color: #666;">Deixe em branco para manter a password atual</small>
             </div>
 
             <div class="form-group">

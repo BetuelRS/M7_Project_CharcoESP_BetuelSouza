@@ -2,8 +2,22 @@
 require_once __DIR__ . '/../config.php';
 include BASE_PATH . 'db.php';
 
-// Busca sensores ativos para o select
-$sensores = $conn->query("SELECT cod_sensor, nome FROM sensores WHERE ativo = 1 ORDER BY nome");
+if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
+    header('Location: ' . BASE_URL . 'index.php?erro=admin');
+    exit;
+}
+
+// Busca sensores ativos com tipo para definir unidade automaticamente
+$sensores = $conn->query("SELECT cod_sensor, nome, tipo FROM sensores WHERE ativo = 1 ORDER BY nome");
+
+// Mapeamento de tipo para unidade padrão
+$unidades_tipo = [
+    'Temperatura' => '°C',
+    'Humidade' => '%',
+    'Luminosidade' => 'lux',
+    'Qualidade do Ar' => 'µg/m3',
+    'Nível da Água' => 'cm'
+];
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -43,9 +57,9 @@ $sensores = $conn->query("SELECT cod_sensor, nome FROM sensores WHERE ativo = 1 
                 <div class="form-group">
                     <label for="cod_sensor">Sensor:</label>
                     <select name="cod_sensor" id="cod_sensor" required>
-                        <option value="">Selecione um sensor</option>
+                        <option value="" data-tipo="">Selecione um sensor</option>
                         <?php while ($sensor = $sensores->fetch_assoc()): ?>
-                            <option value="<?= $sensor['cod_sensor'] ?>">
+                            <option value="<?= $sensor['cod_sensor'] ?>" data-tipo="<?= htmlspecialchars($sensor['tipo']) ?>">
                                 <?= htmlspecialchars($sensor['nome']) ?>
                             </option>
                         <?php endwhile; ?>
@@ -66,9 +80,9 @@ $sensores = $conn->query("SELECT cod_sensor, nome FROM sensores WHERE ativo = 1 
                         <option value="%">%</option>
                         <option value="cm">cm</option>
                         <option value="µg/m3">µg/m3</option>
-                        <option value="Lux">Lux</option>
-                        <!-- Adicione outras unidades conforme necessário -->
+                        <option value="lux">lux</option>
                     </select>
+                    <small style="color: #666;">A unidade será definida automaticamente ao selecionar o sensor</small>
                 </div>
 
                 <div class="form-group">
@@ -97,5 +111,24 @@ $sensores = $conn->query("SELECT cod_sensor, nome FROM sensores WHERE ativo = 1 
     <footer>
         <?php include '../struct/footer.php'; ?>
     </footer>
+    <script>
+        const unidadesPorTipo = {
+            'Temperatura': '°C',
+            'Humidade': '%',
+            'Luminosidade': 'lux',
+            'Qualidade do Ar': 'µg/m3',
+            'Nível da Água': 'cm'
+        };
+        
+        document.getElementById('cod_sensor').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const tipo = selectedOption.getAttribute('data-tipo');
+            const unidadeSelect = document.getElementById('unidade');
+            
+            if (tipo && unidadesPorTipo[tipo]) {
+                unidadeSelect.value = unidadesPorTipo[tipo];
+            }
+        });
+    </script>
 </body>
 </html>

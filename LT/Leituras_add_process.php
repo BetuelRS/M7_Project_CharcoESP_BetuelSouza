@@ -44,9 +44,9 @@ if ($valor_str === '' || $valor_str === null) {
                 $erros[] = "Comprimento não pode ser negativo";
             }
             break;
-        case 'Lux':
+        case 'lux':
             if ($valor < 0 || $valor > 100000) {
-                $erros[] = "Iluminância deve estar entre 0 e 100.000 Lux";
+                $erros[] = "Iluminância deve estar entre 0 e 100.000 lux";
             }
             break;
         case 'µg/m3':

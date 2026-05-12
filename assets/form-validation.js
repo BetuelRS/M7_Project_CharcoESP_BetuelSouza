@@ -99,9 +99,10 @@ document.addEventListener("DOMContentLoaded", function () {
               if (numValue < 0) return "Comprimento não pode ser negativo";
               break;
             case "Lux":
+            case "lux":
               // Illuminance: non-negative
               if (numValue < 0) return "Iluminância não pode ser negativa";
-              if (numValue > 100000) return "Iluminância muito alta (máximo 100.000 Lux)";
+              if (numValue > 100000) return "Iluminância muito alta (máximo 100.000 lux)";
               break;
             case "µg/m3":
               // Air quality: non-negative

@@ -1,6 +1,12 @@
 <!-- excluir utilizadores -->
 <?php
 require_once __DIR__ . '/../config.php';
+
+if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
+    header('Location: ' . BASE_URL . 'index.php?erro=admin');
+    exit();
+}
+
 include BASE_PATH . 'db.php';
 if (!isset($_GET['id'])) {
     header('Location: ' . BASE_URL . 'Admin/admin.php');

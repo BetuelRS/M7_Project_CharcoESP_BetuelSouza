@@ -241,8 +241,10 @@ function build_query_string($exclude = ['page'], $extra = []) {
                             <td><?= htmlspecialchars($row['unidade']) ?></td>
                             <td><?= date('d/m/Y H:i', strtotime($row['data_hora'])) ?></td>
                             <td>
+                                <?php if (!empty($_SESSION['user_admin'])): ?>
                                 <a href="leituras_editar.php?cod_leituras=<?= $row['cod_leituras'] ?>" class="action-link edit"><i class="fas fa-edit"></i></a>
                                 <a href="leituras_excluir.php?cod_leituras=<?= $row['cod_leituras'] ?>" class="action-link delete" onclick="return confirm('Tem certeza que deseja excluir esta leitura?')"><i class="fas fa-trash"></i></a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endwhile; ?>

@@ -25,9 +25,11 @@ include BASE_PATH . 'db.php';
     <main class="sensors-main">
         <div class="page-header">
             <h1><i class="fas fa-microchip"></i> Gestão de Sensores</h1>
+            <?php if (!empty($_SESSION['user_admin'])): ?>
             <a href="<?= BASE_URL ?>SN/SN_add.php" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Adicionar Sensor
             </a>
+            <?php endif; ?>
         </div>
 
         <div class="table-responsive">
@@ -66,12 +68,14 @@ include BASE_PATH . 'db.php';
                             </span>
                         </td>
                         <td class="actions">
+                            <?php if (!empty($_SESSION['user_admin'])): ?>
                             <a href="<?= BASE_URL ?>SN/SN_editar.php?cod_sensor=<?= $row['cod_sensor'] ?>" class="btn-icon btn-edit" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <a href="<?= BASE_URL ?>SN/SN_excluir.php?cod_sensor=<?= $row['cod_sensor'] ?>" class="btn-icon btn-delete" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este sensor?');">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php

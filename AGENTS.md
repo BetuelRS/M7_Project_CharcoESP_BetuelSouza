@@ -1,35 +1,35 @@
 # M7_Project Agent Guidelines
 
-## Project Structure
-- PHP web application with MySQL database
-- Main entrypoint: `index.php`
-- Core files: `config.php`, `db.php`, `dashboard.php`
-- Templates: `struct/header.php`, `struct/footer.php`
-- Static assets: `assets/` (includes CSS, JS, and form validation)
-- Auth system: `auth/` (login, register, logout)
-- Admin panel: `Admin/`
-- Database schema: `DataBase/charco_db.sql`
-- Database connection in `db.php`
+## Project
+- PHP/MySQL web app (no framework). Entry: `index.php`
+- Language: Portuguese throughout
 
-## Setup Instructions
-1. Import database: `DataBase/charco_db.sql` into MySQL
-2. Verify database credentials in `db.php` match your MySQL setup
-3. Ensure PHP server is running (Apache/Nginx)
-4. Access application at `http://localhost/M7_Project/`
+## Setup
+1. Import `DataBase/charco_db.sql` into MySQL
+2. Match credentials in `db.php` (server/username/password/dbname)
+3. Run on Apache/Nginx at `http://localhost/M7_Project/`
+4. Default credentials: `admin1`/`password` (bcrypt hash is `$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi`)
 
-## Development Commands
-- No build system or package manager
-- Run directly on PHP server (Apache/Nginx)
-- Database: MySQL with credentials in `db.php`
-- Base URL defined in `config.php`: `http://localhost/M7_Project/`
+## PHP Architecture
+- **Always** `require_once __DIR__ . '/config.php'` first (starts session, defines `BASE_URL`/`BASE_PATH`)
+- Auth: `$_SESSION['user_id']` for login, `$_SESSION['user_admin']` for admin check
+- Database: mysqli directly (no ORM). Include `db.php` after `config.php`
 
-## Important Notes
-- Session started in `config.php`
-- All PHP files require `config.php` first
-- Database queries use mysqli directly
-- No frameworks or libraries used
-- HTML/CSS/JS in PHP files
-- Authentication checked via `$_SESSION['user_id']`
-- Admin access requires `$_SESSION['user_admin']` set to true
-- Client-side form validation implemented in `assets/form-validation.js`
-- Registration form (`auth/register.php`) uses real-time validation with visual feedback
+## Directories
+| Dir | Purpose |
+|-----|---------|
+| `auth/` | Login, register, logout, password recovery |
+| `Admin/` | User management (requires admin session) |
+| `LT/` | Readings (leituras) - list, add, edit, delete |
+| `SN/` | Sensors (sensores) - list, add, edit, delete |
+| `RT/` | Reports (relatórios) - download CSV/JSON exports |
+| `struct/` | Header/footer templates |
+| `assets/` | CSS, JS, form-validation.js |
+
+## Form Validation
+- Client-side: `assets/form-validation.js`
+- Unit-aware range validation: `°C` (-50 to 150), `%` (0-100), `cm`/`m` (non-neg), `Lux` (0-100k), `µg/m3` (0-500)
+- Real-time validation on registration and CRUD forms
+
+## Development Utilities
+- `DataBase/gerar_leituras.php` - generate test readings (run via browser)

@@ -38,6 +38,14 @@ require_once __DIR__ . '/../config.php';
                 <?php unset($_SESSION['register_success']); ?>
             <?php endif; ?>
 
+            <?php if (isset($_SESSION['login_success'])): ?>
+                <div class="auth-message success">
+                    <i class="fas fa-check-circle"></i>
+                    <?= $_SESSION['login_success'] ?>
+                </div>
+                <?php unset($_SESSION['login_success']); ?>
+            <?php endif; ?>
+
             <form class="auth-form" action="<?= BASE_URL ?>auth/process_login.php" method="post">
                 <div class="form-group">
                     <label for="username">
@@ -59,6 +67,7 @@ require_once __DIR__ . '/../config.php';
             </form>
 
             <div class="auth-links">
+                <p><a href="<?= BASE_URL ?>auth/recover.php">Esqueceu a password?</a></p>
                 <p>Ainda não tem conta? <a href="<?= BASE_URL ?>auth/register.php">Registe-se</a></p>
             </div>
         </div>

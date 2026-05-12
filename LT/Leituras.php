@@ -31,9 +31,11 @@ if (!isset($_SESSION['user_id'])) {
 
         <div class="action-buttons">
 
+            <?php if (!empty($_SESSION['user_admin'])): ?>
             <a href="<?= BASE_URL ?>LT/leituras_add.php" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Adicionar Leitura
             </a>
+            <?php endif; ?>
             <a href="<?= BASE_URL ?>LT/leituras_todas.php" class="btn btn-secondary">
                 <i class="fas fa-list"></i> Ver Todas
             </a>
@@ -72,6 +74,7 @@ if (!isset($_SESSION['user_id'])) {
                             <td><?= htmlspecialchars($row['unidade']) ?></td>
                             <td><?= date('d/m/Y H:i', strtotime($row['data_hora'])) ?></td>
                             <td>
+                                <?php if (!empty($_SESSION['user_admin'])): ?>
                                 <a href="leituras_editar.php?cod_leituras=<?= $row['cod_leituras'] ?>" class="action-link edit">
                                     <i class="fas fa-edit"></i> Editar
                                 </a>
@@ -80,6 +83,7 @@ if (!isset($_SESSION['user_id'])) {
                                     onclick="return confirm('Tem certeza que deseja excluir esta leitura?')">
                                     <i class="fas fa-trash"></i> Excluir
                                 </a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php

@@ -1,10 +1,16 @@
 <!-- Add Utilizador, formulário e processamento -->
 <?php
 require_once __DIR__ . '/../config.php';
+
+if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
+    header('Location: ' . BASE_URL . 'index.php?erro=admin');
+    exit();
+}
+
 include BASE_PATH . 'db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
     $email = trim($_POST['email']);
     $nome_completo = trim($_POST['nome_completo']);
     $admin = isset($_POST['admin']) ? 1 : 0;

@@ -5,26 +5,25 @@ include BASE_PATH . 'db.php';
 ?>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $cod_sensor = $_POST['cod_sensor'];
+    $cod_sensor = (int)$_POST['cod_sensor'];
     $nome = $_POST['nome'];
     $tipo = $_POST['tipo'];
-    $descricao = $_POST['descricao'];
-    $modelo = $_POST['modelo'];
-    $fabricante = $_POST['fabricante'];
-    $localizacao = $_POST['localizacao'];
-    $ativo = $_POST['ativo'];
+    $descricao = $_POST['descricao'] ?? '';
+    $modelo = $_POST['modelo'] ?? '';
+    $fabricante = $_POST['fabricante'] ?? '';
+    $localizacao = $_POST['localizacao'] ?? '';
+    $ativo = isset($_POST['ativo']) ? 1 : 0;
 
-    $sql = "UPDATE sensores SET nome='$nome', tipo='$tipo', descricao='$descricao', modelo='$modelo', fabricante='$fabricante', localizacao='$localizacao', ativo=$ativo WHERE cod_sensor=$cod_sensor";
+    $stmt = $conn->prepare("UPDATE sensores SET nome = ?, tipo = ?, descricao = ?, modelo = ?, fabricante = ?, localizacao = ?, ativo = ? WHERE cod_sensor = ?");
+    $stmt->bind_param("ssssssii", $nome, $tipo, $descricao, $modelo, $fabricante, $localizacao, $ativo, $cod_sensor);
 
-    if ($conn->query($sql) === TRUE) {
-        echo "Sensor atualizado com sucesso";
-        header("Location: Sensores.php");
-        header("Location: " . BASE_URL . "SN/Sensores.php");
-exit();
+    if ($stmt->execute()) {
+        header("Location: " . BASE_URL . "SN/Sensores.php?msg=atualizado");
         exit();
     } else {
         echo "Erro ao atualizar sensor: " . $conn->error;
     }
+    $stmt->close();
 } else {
     echo "Método de requisição inválido";
 }

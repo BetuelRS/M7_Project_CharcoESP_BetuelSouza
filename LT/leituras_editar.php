@@ -2,6 +2,11 @@
 require_once __DIR__ . '/../config.php';
 include BASE_PATH . 'db.php';
 
+if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
+    header('Location: ' . BASE_URL . 'index.php?erro=admin');
+    exit;
+}
+
 // Verifica se o código da leitura foi passado
 if (!isset($_GET['cod_leituras']) || empty($_GET['cod_leituras'])) {
     header('Location: ' . BASE_URL . 'LT/Leituras.php');

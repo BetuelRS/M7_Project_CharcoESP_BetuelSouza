@@ -2,6 +2,11 @@
 require_once __DIR__ . '/../config.php';
 include BASE_PATH . 'db.php';
 
+if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
+    header('Location: ' . BASE_URL . 'index.php?erro=admin');
+    exit;
+}
+
 if (isset($_GET['cod_leituras'])) {
     $cod_leituras = $_GET['cod_leituras'];
     $sql = "DELETE FROM leituras WHERE cod_leituras = ?";

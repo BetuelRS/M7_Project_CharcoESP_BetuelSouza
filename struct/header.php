@@ -16,9 +16,11 @@
             <ul class="nav-list">
                 <li><a href="<?= BASE_URL ?>index.php" class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">Home</a></li>
                 
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <li><a href="<?= BASE_URL ?>LT/Leituras.php" class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'Leituras.php') !== false ? 'active' : '' ?>">Leituras</a></li>
-                    <li><a href="<?= BASE_URL ?>SN/Sensores.php" class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'Sensores.php') !== false ? 'active' : '' ?>">Sensores</a></li>
+<?php if (isset($_SESSION['user_id'])): ?>
+                        <li><a href="<?= BASE_URL ?>LT/Leituras.php" class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'Leituras.php') !== false ? 'active' : '' ?>">Leituras</a></li>
+                        <li><a href="<?= BASE_URL ?>LT/grafico.php" class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'grafico.php') !== false ? 'active' : '' ?>">Gráficos</a></li>
+<li><a href="<?= BASE_URL ?>SN/Sensores.php" class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'Sensores.php') !== false ? 'active' : '' ?>">Sensores</a></li>
+                        <li><a href="<?= BASE_URL ?>RT/relatorios.php" class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'RT/') !== false ? 'active' : '' ?>">Relatórios</a></li>
                     
                     <?php if ($_SESSION['user_admin']): ?>
                         <li><a href="<?= BASE_URL ?>admin/admin.php" class="nav-link <?= strpos($_SERVER['PHP_SELF'], 'admin/admin.php') !== false ? 'active' : '' ?>">Admin</a></li>
