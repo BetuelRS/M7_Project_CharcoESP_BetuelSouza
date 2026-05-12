@@ -27,13 +27,19 @@
                     <?php endif; ?>
                     
                     <li class="user-menu">
-                        <span class="user-name">
+                        <a href="#" class="user-name user-menu-toggle">
                             <i class="fas fa-user-circle"></i> 
                             <?= htmlspecialchars($_SESSION['user_name']) ?>
-                        </span>
-                        <a href="<?= BASE_URL ?>auth/logout.php" class="btn-logout" title="Sair">
-                            <i class="fas fa-sign-out-alt"></i>
+                            <i class="fas fa-chevron-down"></i>
                         </a>
+                        <div class="user-dropdown">
+                            <a href="<?= BASE_URL ?>auth/perfil.php" class="dropdown-item">
+                                <i class="fas fa-user-cog"></i> Perfil
+                            </a>
+                            <a href="<?= BASE_URL ?>auth/logout.php" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i> Sair
+                            </a>
+                        </div>
                     </li>
                 <?php else: ?>
                     <li><a href="<?= BASE_URL ?>auth/login.php" class="nav-link">Entrar</a></li>

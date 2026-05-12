@@ -168,4 +168,15 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) monitor();
   });
+
+  const userMenuToggle = document.querySelector('.user-menu-toggle');
+  if (userMenuToggle) {
+    userMenuToggle.addEventListener('click', function(e) {
+      if (window.innerWidth <= 768) {
+        e.preventDefault();
+        const dropdown = this.nextElementSibling;
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+      }
+    });
+  }
 });

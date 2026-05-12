@@ -18,7 +18,7 @@
 ## Directories
 | Dir | Purpose |
 |-----|---------|
-| `auth/` | Login, register, logout, password recovery |
+| `auth/` | Login, register, logout, password recovery, perfil |
 | `Admin/` | User management (requires admin session) |
 | `LT/` | Readings (leituras) - list, add, edit, delete |
 | `SN/` | Sensors (sensores) - list, add, edit, delete |
@@ -33,3 +33,8 @@
 
 ## Development Utilities
 - `DataBase/gerar_leituras.php` - generate test readings (run via browser)
+
+## User Profile
+- Page: `auth/perfil.php`
+- Features: Edit name/email, change password, preferences (theme, notifications)
+- Session updates automatically after profile changes

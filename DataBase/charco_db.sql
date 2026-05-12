@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `utilizadores` (
   `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `nome_completo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `ADMIN` tinyint(1) DEFAULT '0',
+  `preferencias` json DEFAULT NULL,
   PRIMARY KEY (`cod_utilizador`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
