@@ -52,6 +52,7 @@ switch ($action) {
         
         if ($stmt->execute()) {
             $_SESSION['user_name'] = $nome_completo ?: $_SESSION['user_name'];
+            registrar_auditoria($conn, $user_id, 'editar', 'utilizador', $user_id, 'Informações pessoais atualizadas');
             $_SESSION['perfil_success'] = 'Informações atualizadas com sucesso';
         } else {
             $_SESSION['perfil_error'] = 'Erro ao atualizar informações';
@@ -106,6 +107,7 @@ switch ($action) {
         $stmt->bind_param('si', $hashed, $user_id);
 
         if ($stmt->execute()) {
+            registrar_auditoria($conn, $user_id, 'editar', 'utilizador', $user_id, 'Password alterada');
             $_SESSION['perfil_success'] = 'Password alterada com sucesso';
         } else {
             $_SESSION['perfil_error'] = 'Erro ao alterar password';
@@ -125,6 +127,7 @@ switch ($action) {
         $stmt->bind_param('si', $preferencias_json, $user_id);
 
         if ($stmt->execute()) {
+            registrar_auditoria($conn, $user_id, 'editar', 'utilizador', $user_id, 'Preferências atualizadas');
             $_SESSION['perfil_success'] = 'Preferências guardadas com sucesso';
         } else {
             $_SESSION['perfil_error'] = 'Erro ao guardar preferências';

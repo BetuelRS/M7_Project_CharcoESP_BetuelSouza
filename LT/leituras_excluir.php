@@ -16,6 +16,7 @@ if (isset($_GET['cod_leituras'])) {
     $stmt = $conn->prepare("DELETE FROM leituras WHERE cod_leituras = ?");
     $stmt->bind_param("i", $cod_leituras);
     if ($stmt->execute()) {
+        registrar_auditoria($conn, $_SESSION['user_id'], 'eliminar', 'leitura', $cod_leituras, "Leitura ID: $cod_leituras");
         header("Location: " . BASE_URL . "LT/Leituras.php?msg=excluido");
         exit();
     } else {

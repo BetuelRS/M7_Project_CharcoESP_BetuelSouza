@@ -59,6 +59,7 @@ $stmt = $conn->prepare("UPDATE password_reset_tokens SET used = 1 WHERE token = 
 $stmt->bind_param("s", $token);
 $stmt->execute();
 
+registrar_auditoria($conn, null, 'reset_password', 'utilizador', 0, "Password redefinida para: $email");
 $_SESSION['login_success'] = 'Password alterada com sucesso! Faça login com a nova password.';
 header('Location: ' . BASE_URL . 'auth/login.php');
 exit();

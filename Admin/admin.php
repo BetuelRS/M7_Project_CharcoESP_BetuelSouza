@@ -45,6 +45,8 @@ include BASE_PATH . 'db.php';
         <?php endif; ?>
         <a href="<?= BASE_URL ?>Admin/utilizadores_add.php" class="admin-action-btn">Adicionar Novo Utilizador</a>
         <a href="<?= BASE_URL ?>Admin/gerar_leitura_rapida.php?csrf_token=<?= $_SESSION['csrf_token'] ?>" class="admin-action-btn" style="background:#10b981;" onclick="return confirm('Gerar 1 leitura aleatória para cada sensor agora?')">⚡ Gerar Leitura Rápida</a>
+        <a href="<?= BASE_URL ?>Admin/auditoria.php" class="admin-action-btn" style="background:#6366f1;"><i class="fas fa-history"></i> Log de Auditoria</a>
+        <a href="<?= BASE_URL ?>Admin/api_keys.php" class="admin-action-btn" style="background:#f59e0b;"><i class="fas fa-key"></i> API Keys</a>
         <div style="margin: 1rem 0;">
             <input type="text" id="userSearch" placeholder="🔍 Pesquisar utilizadores..." style="padding:8px 12px;border:1px solid #d1d5db;border-radius:6px;width:300px;font-size:14px;">
         </div>

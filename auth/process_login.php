@@ -53,7 +53,17 @@ if ($result->num_rows === 1) {
         $_SESSION['user_id'] = $user['cod_utilizador'];
         $_SESSION['user_name'] = $user['nome_completo'] ?: $user['username'];
         $_SESSION['user_admin'] = (int)$user['ADMIN'];
-        
+        registrar_auditoria($conn, $user['cod_utilizador'], 'login', 'utilizador', $user['cod_utilizador'], 'Login realizado');
+
+        // Registar sessão
+        $sid = session_id();
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+        $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        $stmt = $conn->prepare("INSERT INTO sessoes (utilizador_id, session_id, ip, user_agent) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("isss", $user['cod_utilizador'], $sid, $ip, $ua);
+        $stmt->execute();
+        $stmt->close();
+
         header('Location: ' . BASE_URL . 'index.php');
         exit();
     }

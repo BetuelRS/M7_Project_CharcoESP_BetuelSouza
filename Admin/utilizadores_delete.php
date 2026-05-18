@@ -20,6 +20,7 @@ $id = (int)$_GET['id'];
 $stmt = $conn->prepare("DELETE FROM utilizadores WHERE cod_utilizador = ?");
 $stmt->bind_param("i", $id);
 if ($stmt->execute()) {
+    registrar_auditoria($conn, $_SESSION['user_id'], 'eliminar', 'utilizador', $id, "Utilizador ID: $id");
     header('Location: ' . BASE_URL . 'Admin/admin.php?msg=excluido');
 } else {
     header('Location: ' . BASE_URL . 'Admin/admin.php?erro=bd');

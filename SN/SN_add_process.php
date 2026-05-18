@@ -26,6 +26,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("sssssss", $nome, $tipo, $descricao, $localizacao, $modelo, $fabricante, $data_instalacao);
 
 if ($stmt->execute()) {
+        $new_id = $stmt->insert_id;
+        registrar_auditoria($conn, $_SESSION['user_id'], 'criar', 'sensor', $new_id, "Sensor: $nome ($tipo)");
         header("Location: " . BASE_URL . "SN/Sensores.php?msg=adicionado");
         exit();
     } else {

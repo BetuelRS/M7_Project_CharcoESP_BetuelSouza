@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../config.php';
+include BASE_PATH . 'db.php';
 
+$sid = session_id();
+$conn->query("DELETE FROM sessoes WHERE session_id = '" . $conn->real_escape_string($sid) . "'");
 
 $_SESSION = array();
 if (ini_get("session.use_cookies")) {

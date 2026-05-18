@@ -51,6 +51,8 @@ $stmt = $conn->prepare("INSERT INTO utilizadores (nome_completo, username, email
 $stmt->bind_param("ssss", $nome_completo, $username, $email, $password_hash);
 
 if ($stmt->execute()) {
+    $new_id = $stmt->insert_id;
+    registrar_auditoria($conn, null, 'registar', 'utilizador', $new_id, "Novo utilizador: $username");
     $_SESSION['register_success'] = 'Conta criada com sucesso! Faça login.';
     header('Location: ' . BASE_URL . 'auth/login.php');
 } else {

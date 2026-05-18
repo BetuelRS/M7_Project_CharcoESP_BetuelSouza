@@ -165,6 +165,38 @@ unset($_SESSION['perfil_success'], $_SESSION['perfil_error']);
                         </div>
                     </div>
                 </div>
+
+                <div class="profile-card">
+                    <div class="card-header">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <h3>Últimos Acessos</h3>
+                    </div>
+                    <div class="info-items">
+                        <?php
+                        $stmt = $conn->prepare("SELECT ip, user_agent, created_at FROM sessoes WHERE utilizador_id = ? ORDER BY created_at DESC LIMIT 10");
+                        $stmt->bind_param('i', $user_id);
+                        $stmt->execute();
+                        $sessoes = $stmt->get_result();
+                        if ($sessoes->num_rows > 0):
+                            while ($s = $sessoes->fetch_assoc()):
+                        ?>
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-circle" style="font-size:8px;color:#10b981;vertical-align:middle;"></i>
+                                <?= date('d/m/Y H:i', strtotime($s['created_at'])) ?>
+                                <small style="color:#9ca3af;display:block;"><?= htmlspecialchars($s['ip']) ?></small>
+                            </span>
+                            <span class="info-value" style="font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                <?= htmlspecialchars(mb_substr($s['user_agent'] ?? '', 0, 60)) ?>
+                            </span>
+                        </div>
+                        <?php endwhile; else: ?>
+                        <div class="info-item">
+                            <span class="info-label">Nenhum registo de acesso.</span>
+                        </div>
+                        <?php endif; $stmt->close(); ?>
+                    </div>
+                </div>
             </div>
         </div>
     </main>

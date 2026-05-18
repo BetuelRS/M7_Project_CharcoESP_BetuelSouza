@@ -26,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssssssii", $nome, $tipo, $descricao, $modelo, $fabricante, $localizacao, $ativo, $cod_sensor);
 
     if ($stmt->execute()) {
+        registrar_auditoria($conn, $_SESSION['user_id'], 'editar', 'sensor', $cod_sensor, "Sensor: $nome ($tipo)");
         header("Location: " . BASE_URL . "SN/Sensores.php?msg=atualizado");
         exit();
     } else {

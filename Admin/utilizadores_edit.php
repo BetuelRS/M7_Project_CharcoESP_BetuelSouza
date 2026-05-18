@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($stmt->execute()) {
+        registrar_auditoria($conn, $_SESSION['user_id'], 'editar', 'utilizador', $id, "Utilizador: $username");
         header('Location: ' . BASE_URL . 'Admin/admin.php?msg=atualizado');
     } else {
         header('Location: ' . BASE_URL . 'Admin/utilizadores_edit.php?id=' . $id . '&erro=bd');

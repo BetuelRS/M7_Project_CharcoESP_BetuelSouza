@@ -30,6 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ssssi", $username, $password, $email, $nome_completo, $admin);
 
     if ($stmt->execute()) {
+        $new_id = $stmt->insert_id;
+        registrar_auditoria($conn, $_SESSION['user_id'], 'criar', 'utilizador', $new_id, "Novo utilizador: $username");
         header('Location: ' . BASE_URL . 'Admin/admin.php?msg=adicionado');
     } else {
         header('Location: ' . BASE_URL . 'Admin/utilizadores_add.php?erro=bd');

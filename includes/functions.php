@@ -1,4 +1,28 @@
 <?php
+function load_env($file = null) {
+    if ($file === null) {
+        $file = __DIR__ . '/../.env';
+    }
+    if (!file_exists($file)) return;
+    $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if ($line === '' || str_starts_with($line, '#')) continue;
+        if (str_contains($line, '=')) {
+            [$key, $value] = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value, " \t\n\r\0\x0B\"'");
+            putenv("$key=$value");
+            $_ENV[$key] = $value;
+        }
+    }
+}
+
+function env($key, $default = null) {
+    $value = $_ENV[$key] ?? getenv($key);
+    return $value !== false && $value !== null ? $value : $default;
+}
+
 function validar_valor_unidade($valor, $unidade) {
     $erros = [];
     if (!is_numeric($valor) && $valor !== '') {
@@ -60,4 +84,12 @@ function csrf_input() {
 function redirect($url) {
     header('Location: ' . $url);
     exit();
+}
+
+function registrar_auditoria($conn, $utilizador_id, $acao, $entidade, $entidade_id, $detalhes = null) {
+    $stmt = $conn->prepare("INSERT INTO auditoria (utilizador_id, acao, entidade, entidade_id, detalhes, ip) VALUES (?, ?, ?, ?, ?, ?)");
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+    $stmt->bind_param("ississ", $utilizador_id, $acao, $entidade, $entidade_id, $detalhes, $ip);
+    $stmt->execute();
+    $stmt->close();
 }

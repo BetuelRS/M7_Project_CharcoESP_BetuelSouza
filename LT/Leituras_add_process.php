@@ -58,7 +58,8 @@ $stmt = $conn->prepare("INSERT INTO leituras (cod_sensor, valor, unidade, data_h
 $stmt->bind_param("idsss", $cod_sensor, $valor, $unidade, $data_hora, $observacoes);
 
 if ($stmt->execute()) {
-    // Sucesso
+    $new_id = $stmt->insert_id;
+    registrar_auditoria($conn, $_SESSION['user_id'], 'criar', 'leitura', $new_id, "Leitura: $valor $unidade (sensor $cod_sensor)");
     header('Location: ' . BASE_URL . 'LT/Leituras.php?msg=adicionado');
 } else {
     // Erro

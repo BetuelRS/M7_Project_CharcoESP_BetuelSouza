@@ -62,7 +62,7 @@ $stmt = $conn->prepare("UPDATE leituras SET cod_sensor = ?, valor = ?, unidade =
 $stmt->bind_param("idsssi", $cod_sensor, $valor, $unidade, $data_hora, $observacoes, $cod_leituras);
 
 if ($stmt->execute()) {
-    // Sucesso
+    registrar_auditoria($conn, $_SESSION['user_id'], 'editar', 'leitura', $cod_leituras, "Leitura ID: $cod_leituras");
     header('Location: ' . BASE_URL . 'LT/Leituras.php?msg=atualizado');
 } else {
     // Erro

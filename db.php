@@ -1,13 +1,12 @@
 <?php
 require_once __DIR__ . '/config.php';
-?>
-<?php
-$servername = "localhost";
-$username = "BetuelSouza";
-$password = "Betuel.300108";
-$dbname = "charco_db";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli(
+    env('DB_HOST', 'localhost'),
+    env('DB_USER', 'root'),
+    env('DB_PASS', ''),
+    env('DB_NAME', 'charco_db')
+);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);

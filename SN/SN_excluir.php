@@ -19,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['cod_sensor'])) {
     $stmt->bind_param("i", $cod_sensor);
     
     if ($stmt->execute()) {
+        registrar_auditoria($conn, $_SESSION['user_id'], 'eliminar', 'sensor', $cod_sensor, "Sensor ID: $cod_sensor");
         header("Location: " . BASE_URL . "SN/Sensores.php?msg=excluido");
         exit();
     } else {
