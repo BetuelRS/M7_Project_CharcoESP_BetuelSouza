@@ -2,6 +2,7 @@
     "name": "betuelrs/m7_project",
     "description": "DashBoard ESP - Pond monitoring system",
     "type": "project",
+    "license": "proprietary",
     "require": {
         "php": ">=8.0",
         "dompdf/dompdf": "^3.1"

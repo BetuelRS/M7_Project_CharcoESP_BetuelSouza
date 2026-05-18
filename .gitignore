@@ -31,7 +31,6 @@ config_local.php
 # Composer
 vendor/
 composer.phar
-composer.lock
 
 # OS
 Thumbs.db
