@@ -78,7 +78,7 @@ if (!isset($_SESSION['user_id'])) {
                                 <a href="leituras_editar.php?cod_leituras=<?= $row['cod_leituras'] ?>" class="action-link edit">
                                     <i class="fas fa-edit"></i> Editar
                                 </a>
-                                <a href="leituras_excluir.php?cod_leituras=<?= $row['cod_leituras'] ?>"
+                                <a href="leituras_excluir.php?cod_leituras=<?= $row['cod_leituras'] ?>&csrf_token=<?= $_SESSION['csrf_token'] ?>"
                                     class="action-link delete"
                                     onclick="return confirm('Tem certeza que deseja excluir esta leitura?')">
                                     <i class="fas fa-trash"></i> Excluir

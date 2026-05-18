@@ -12,13 +12,17 @@ if (!isset($_GET['id'])) {
     header('Location: ' . BASE_URL . 'Admin/admin.php');
     exit();
 }
+if (!isset($_GET['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_GET['csrf_token'])) {
+    header('Location: ' . BASE_URL . 'Admin/admin.php?erro=csrf');
+    exit();
+}
 $id = (int)$_GET['id'];
 $stmt = $conn->prepare("DELETE FROM utilizadores WHERE cod_utilizador = ?");
 $stmt->bind_param("i", $id);
 if ($stmt->execute()) {
     header('Location: ' . BASE_URL . 'Admin/admin.php?msg=excluido');
 } else {
-    header('Location: ' . BASE_URL . 'Admin/admin.php?msg=erro');
+    header('Location: ' . BASE_URL . 'Admin/admin.php?erro=bd');
 }   
 $stmt->close();
 $conn->close();

@@ -52,6 +52,7 @@ if (empty($token)) {
                 </div>
             <?php elseif ($success): ?>
                 <form class="auth-form" action="<?= BASE_URL ?>auth/process_reset_password.php" method="post">
+                    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                     <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
                     
                     <div class="form-group">

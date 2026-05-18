@@ -9,18 +9,25 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['cod_sensor'])) {
+    if (!isset($_GET['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_GET['csrf_token'])) {
+        header("Location: " . BASE_URL . "SN/Sensores.php?erro=csrf");
+        exit();
+    }
     $cod_sensor = intval($_GET['cod_sensor']);
 
-    $sql = "DELETE FROM sensores WHERE cod_sensor = $cod_sensor";
+    $stmt = $conn->prepare("DELETE FROM sensores WHERE cod_sensor = ?");
+    $stmt->bind_param("i", $cod_sensor);
     
-    if ($conn->query($sql) === TRUE) {
-        // Redireciona de volta para a lista
-        header("Location: " . BASE_URL . "SN/Sensores.php");
+    if ($stmt->execute()) {
+        header("Location: " . BASE_URL . "SN/Sensores.php?msg=excluido");
         exit();
     } else {
-        echo "Erro ao excluir sensor: " . $conn->error;
+        header("Location: " . BASE_URL . "SN/Sensores.php?erro=bd");
+        exit();
     }
+    $stmt->close();
 } else {
-    echo "Método de requisição inválido ou código não fornecido.";
+    header("Location: " . BASE_URL . "SN/Sensores.php");
+    exit();
 }
 ?>

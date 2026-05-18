@@ -24,7 +24,7 @@ require_once __DIR__ . '/../config.php';
             <?php if (isset($_SESSION['recover_error'])): ?>
                 <div class="auth-message error">
                     <i class="fas fa-exclamation-circle"></i>
-                    <?= $_SESSION['recover_error'] ?>
+                    <?= htmlspecialchars($_SESSION['recover_error']) ?>
                 </div>
                 <?php unset($_SESSION['recover_error']); ?>
             <?php endif; ?>
@@ -32,12 +32,13 @@ require_once __DIR__ . '/../config.php';
             <?php if (isset($_SESSION['recover_success'])): ?>
                 <div class="auth-message success">
                     <i class="fas fa-check-circle"></i>
-                    <?= $_SESSION['recover_success'] ?>
+                    <?= htmlspecialchars($_SESSION['recover_success']) ?>
                 </div>
                 <?php unset($_SESSION['recover_success']); ?>
             <?php endif; ?>
 
             <form class="auth-form" action="<?= BASE_URL ?>auth/process_recover.php" method="post">
+                <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                 <div class="form-group">
                     <label for="email">
                         <i class="fas fa-envelope"></i> Email da conta

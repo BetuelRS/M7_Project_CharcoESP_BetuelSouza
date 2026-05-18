@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT cod_utilizador, username, email, nome_completo, ADMIN, preferencias FROM utilizadores WHERE cod_utilizador = ?");
+$stmt = $conn->prepare("SELECT cod_utilizador, username, email, nome_completo, ADMIN, preferencias, created_at FROM utilizadores WHERE cod_utilizador = ?");
 $stmt->bind_param('i', $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -62,6 +62,7 @@ unset($_SESSION['perfil_success'], $_SESSION['perfil_error']);
                         <h3>Informações Pessoais</h3>
                     </div>
                     <form action="perfil_process.php" method="POST" class="profile-form">
+                        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                         <input type="hidden" name="action" value="info">
                         <div class="form-group">
                             <label for="username">Nome de Utilizador</label>
@@ -88,6 +89,7 @@ unset($_SESSION['perfil_success'], $_SESSION['perfil_error']);
                         <h3>Alterar Password</h3>
                     </div>
                     <form action="perfil_process.php" method="POST" class="profile-form" id="passwordForm">
+                        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                         <input type="hidden" name="action" value="password">
                         <div class="form-group">
                             <label for="password_atual">Password Atual</label>
@@ -113,6 +115,7 @@ unset($_SESSION['perfil_success'], $_SESSION['perfil_error']);
                         <h3>Preferências</h3>
                     </div>
                     <form action="perfil_process.php" method="POST" class="profile-form">
+                        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                         <input type="hidden" name="action" value="preferencias">
                         <div class="form-group">
                             <label for="notificacoes">Notificações por Email</label>
@@ -158,7 +161,7 @@ unset($_SESSION['perfil_success'], $_SESSION['perfil_error']);
                         </div>
                         <div class="info-item">
                             <span class="info-label">Membro desde:</span>
-                            <span class="info-value">-</span>
+                            <span class="info-value"><?= $user['created_at'] ? date('d/m/Y', strtotime($user['created_at'])) : '-' ?></span>
                         </div>
                     </div>
                 </div>

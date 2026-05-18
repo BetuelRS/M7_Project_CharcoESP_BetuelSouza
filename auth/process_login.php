@@ -7,6 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
+if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+    $_SESSION['login_error'] = 'Erro de validação do formulário. Tente novamente.';
+    header('Location: ' . BASE_URL . 'auth/login.php');
+    exit();
+}
+
 $username = trim($_POST['username'] ?? '');
 $password = $_POST['password'] ?? '';
 
@@ -43,6 +49,7 @@ if ($result->num_rows === 1) {
         }
 
         // Login bem-sucedido
+        session_regenerate_id(true);
         $_SESSION['user_id'] = $user['cod_utilizador'];
         $_SESSION['user_name'] = $user['nome_completo'] ?: $user['username'];
         $_SESSION['user_admin'] = (int)$user['ADMIN'];

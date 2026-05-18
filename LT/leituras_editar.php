@@ -68,6 +68,7 @@ $sensores = $conn->query("SELECT cod_sensor, nome FROM sensores WHERE ativo = 1 
 
         <div class="form-container">
             <form action="leituras_atualizar.php" method="post" class="readings-form">
+                <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                 <input type="hidden" name="cod_leituras" value="<?= $leitura['cod_leituras'] ?>">
 
                 <div class="form-group">

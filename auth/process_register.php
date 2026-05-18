@@ -7,6 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
+if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+    $_SESSION['register_error'] = 'Erro de validação do formulário. Tente novamente.';
+    header('Location: ' . BASE_URL . 'auth/register.php');
+    exit();
+}
+
 $nome_completo = trim($_POST['nome_completo'] ?? '');
 $username = trim($_POST['username'] ?? '');
 $email = trim($_POST['email'] ?? '');
@@ -48,7 +54,7 @@ if ($stmt->execute()) {
     $_SESSION['register_success'] = 'Conta criada com sucesso! Faça login.';
     header('Location: ' . BASE_URL . 'auth/login.php');
 } else {
-    $_SESSION['register_error'] = 'Erro ao criar conta: ' . $conn->error;
+    $_SESSION['register_error'] = 'Erro ao criar conta. Tente novamente.';
     header('Location: ' . BASE_URL . 'auth/register.php');
 }
 $stmt->close();

@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config.php';
 include BASE_PATH . 'db.php';
+require_once BASE_PATH . 'includes/functions.php';
 
 // Períodos disponíveis
 $periods = [
@@ -245,21 +246,17 @@ foreach ($tipos_to_query as $tipo) {
                         echo $withData;
                     ?> gráfico(s) com dados
             <?php if ($sensor_filter): ?>
-                | Filtrado por: <?= htmlspecialchars($sensors[array_search($sensor_filter, array_column($sensors, 'cod_sensor'))]['nome'] ?? 'Sensor') ?>
+                | Filtrado por: <?php
+                    $sensor_idx = array_search($sensor_filter, array_column($sensors, 'cod_sensor'));
+                    echo htmlspecialchars($sensor_idx !== false ? ($sensors[$sensor_idx]['nome'] ?? 'Sensor') : 'Sensor');
+                ?>
             <?php endif; ?>
         </div>
 
         <!-- Cartões de estatísticas -->
         <div class="stats-summary">
             <?php foreach ($stats as $tipo => $data): ?>
-            <?php
-                $iconClass = 'fa-chart-line';
-                if ($tipo === 'Temperatura') $iconClass = 'fa-thermometer-half';
-                elseif ($tipo === 'Humidade') $iconClass = 'fa-tint';
-                elseif ($tipo === 'Luminosidade') $iconClass = 'fa-lightbulb';
-                elseif ($tipo === 'Qualidade do Ar') $iconClass = 'fa-wind';
-                elseif ($tipo === 'Nível da Água') $iconClass = 'fa-water';
-            ?>
+            <?php $iconClass = tipo_para_icone($tipo); ?>
             <div class="stat-card-mini">
                 <div class="stat-card-mini-header">
                     <i class="fas <?= $iconClass ?>"></i>
@@ -277,14 +274,7 @@ foreach ($tipos_to_query as $tipo) {
         <!-- Gráficos -->
         <div class="charts-grid">
             <?php foreach ($chart_data as $tipo => $data): ?>
-            <?php
-                $chartIcon = 'fa-chart-line';
-                if ($tipo === 'Temperatura') $chartIcon = 'fa-thermometer-half';
-                elseif ($tipo === 'Humidade') $chartIcon = 'fa-tint';
-                elseif ($tipo === 'Luminosidade') $chartIcon = 'fa-lightbulb';
-                elseif ($tipo === 'Qualidade do Ar') $chartIcon = 'fa-wind';
-                elseif ($tipo === 'Nível da Água') $chartIcon = 'fa-water';
-            ?>
+            <?php $chartIcon = tipo_para_icone($tipo); ?>
             <div class="chart-card">
                 <div class="chart-header">
                     <h3>

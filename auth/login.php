@@ -25,7 +25,7 @@ require_once __DIR__ . '/../config.php';
             <?php if (isset($_SESSION['login_error'])): ?>
                 <div class="auth-message error">
                     <i class="fas fa-exclamation-circle"></i>
-                    <?= $_SESSION['login_error'] ?>
+                    <?= htmlspecialchars($_SESSION['login_error']) ?>
                 </div>
                 <?php unset($_SESSION['login_error']); ?>
             <?php endif; ?>
@@ -33,7 +33,7 @@ require_once __DIR__ . '/../config.php';
             <?php if (isset($_SESSION['register_success'])): ?>
                 <div class="auth-message success">
                     <i class="fas fa-check-circle"></i>
-                    <?= $_SESSION['register_success'] ?>
+                    <?= htmlspecialchars($_SESSION['register_success']) ?>
                 </div>
                 <?php unset($_SESSION['register_success']); ?>
             <?php endif; ?>
@@ -41,12 +41,13 @@ require_once __DIR__ . '/../config.php';
             <?php if (isset($_SESSION['login_success'])): ?>
                 <div class="auth-message success">
                     <i class="fas fa-check-circle"></i>
-                    <?= $_SESSION['login_success'] ?>
+                    <?= htmlspecialchars($_SESSION['login_success']) ?>
                 </div>
                 <?php unset($_SESSION['login_success']); ?>
             <?php endif; ?>
 
             <form class="auth-form" action="<?= BASE_URL ?>auth/process_login.php" method="post">
+                <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                 <div class="form-group">
                     <label for="username">
                         <i class="fas fa-user"></i> Usuário ou Email

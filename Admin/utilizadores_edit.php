@@ -9,6 +9,10 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
 
 include BASE_PATH . 'db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+        header('Location: ' . BASE_URL . 'Admin/admin.php?erro=csrf');
+        exit();
+    }
     $id = (int)$_POST['id'];
     $username = trim($_POST['username']);
     $password_input = $_POST['password'];
@@ -56,7 +60,7 @@ $user = $result->fetch_assoc();
 $stmt->close();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,6 +76,7 @@ $stmt->close();
     <main class="conteudo">
         <h1 class="admin-title">Editar Utilizador</h1>
         <form action="<?= BASE_URL ?>Admin/utilizadores_edit.php" method="POST" class="admin-form">
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
             <input type="hidden" name="id" value="<?= $user['cod_utilizador'] ?>">
             <div class="form-group">
                 <label for="username">Username:</label>
@@ -80,7 +85,7 @@ $stmt->close();
 
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Deixe em branco para manter a atual" required>
+                <input type="password" id="password" name="password" placeholder="Deixe em branco para manter a atual">
                 <small style="color: #666;">Deixe em branco para manter a password atual</small>
             </div>
 

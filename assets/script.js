@@ -179,4 +179,26 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  // Prevent double-submit on all forms
+  document.querySelectorAll('form').forEach(function(form) {
+    form.addEventListener('submit', function() {
+      var btn = this.querySelector('button[type="submit"]');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = (btn.dataset.loadingText || 'A guardar...');
+      }
+    });
+  });
+
+  // Admin user search filter
+  var searchInput = document.getElementById('userSearch');
+  if (searchInput) {
+    searchInput.addEventListener('keyup', function() {
+      var q = this.value.toLowerCase();
+      document.querySelectorAll('.admin-table tbody tr').forEach(function(row) {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+  }
 });

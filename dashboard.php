@@ -2,6 +2,7 @@
 <?php
 require_once __DIR__ . '/config.php';
 include BASE_PATH . 'db.php';
+require_once BASE_PATH . 'includes/functions.php';
 
 // Estatísticas dos últimos 7 dias
 $stats = [];
@@ -95,19 +96,10 @@ $total_leituras = ($result->num_rows > 0) ? $result->fetch_assoc()['total_leitur
     <div class="dashboard-section">
         <h2 class="dashboard-section-title">Estatísticas (Últimos 7 dias)</h2>
         <div class="stats-grid">
-            <?php
-            $stat_icons = [
-                'Temperatura' => 'fa-thermometer-half',
-                'Humidade' => 'fa-tint',
-                'Luminosidade' => 'fa-lightbulb',
-                'Qualidade do Ar' => 'fa-wind',
-                'Nível da Água' => 'fa-water'
-            ];
-            foreach ($stats as $tipo => $dados):
-            ?>
+            <?php foreach ($stats as $tipo => $dados): ?>
             <div class="dashboard-card stat-card">
                 <div class="card-icon">
-                    <i class="fas <?= $stat_icons[$tipo] ?? 'fa-chart-line' ?>"></i>
+                    <i class="fas <?= tipo_para_icone($tipo) ?>"></i>
                 </div>
                 <div class="card-content">
                     <h3><?= htmlspecialchars($tipo) ?></h3>
@@ -127,21 +119,12 @@ $total_leituras = ($result->num_rows > 0) ? $result->fetch_assoc()['total_leitur
     <div class="dashboard-section">
         <h2 class="dashboard-section-title">Última Leitura por Sensor</h2>
         <div class="last-readings-grid">
-            <?php
-            $reading_icons = [
-                'Temperatura' => 'fa-thermometer-half',
-                'Humidade' => 'fa-tint',
-                'Luminosidade' => 'fa-lightbulb',
-                'Qualidade do Ar' => 'fa-wind',
-                'Nível da Água' => 'fa-water'
-            ];
-            $tipos_ordem = ['Temperatura', 'Humidade', 'Luminosidade', 'Qualidade do Ar', 'Nível da Água'];
-            foreach ($tipos_ordem as $tipo):
+            <?php foreach (tipos_ordenados() as $tipo):
                 $leitura = $ultimas_leituras[$tipo] ?? null;
             ?>
             <div class="dashboard-card last-reading-card">
                 <div class="card-icon">
-                    <i class="fas <?= $reading_icons[$tipo] ?? 'fa-chart-line' ?>"></i>
+                    <i class="fas <?= tipo_para_icone($tipo) ?>"></i>
                 </div>
                 <div class="card-content">
                     <h3><?= htmlspecialchars($tipo) ?></h3>

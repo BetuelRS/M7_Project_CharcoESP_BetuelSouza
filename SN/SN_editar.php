@@ -33,12 +33,15 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
         <?php
         if (isset($_GET['cod_sensor'])) {
             $cod_sensor = intval($_GET['cod_sensor']);
-            $sql = "SELECT * FROM sensores WHERE cod_sensor = $cod_sensor";
-            $result = $conn->query($sql);
+            $stmt = $conn->prepare("SELECT * FROM sensores WHERE cod_sensor = ?");
+            $stmt->bind_param("i", $cod_sensor);
+            $stmt->execute();
+            $result = $stmt->get_result();
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
         ?>
         <form action="SN_atualizar.php" method="post" class="sensor-form">
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
             <input type="hidden" name="cod_sensor" value="<?= $row['cod_sensor'] ?>">
 
             <div class="form-grid">

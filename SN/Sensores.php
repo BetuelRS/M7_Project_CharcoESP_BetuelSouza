@@ -72,7 +72,7 @@ include BASE_PATH . 'db.php';
                             <a href="<?= BASE_URL ?>SN/SN_editar.php?cod_sensor=<?= $row['cod_sensor'] ?>" class="btn-icon btn-edit" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="<?= BASE_URL ?>SN/SN_excluir.php?cod_sensor=<?= $row['cod_sensor'] ?>" class="btn-icon btn-delete" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este sensor?');">
+                            <a href="<?= BASE_URL ?>SN/SN_excluir.php?cod_sensor=<?= $row['cod_sensor'] ?>&csrf_token=<?= $_SESSION['csrf_token'] ?>" class="btn-icon btn-delete" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este sensor?');">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
                             <?php endif; ?>

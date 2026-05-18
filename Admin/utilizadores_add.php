@@ -9,6 +9,10 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
 
 include BASE_PATH . 'db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+        header('Location: ' . BASE_URL . 'Admin/utilizadores_add.php?erro=csrf');
+        exit();
+    }
     $username = trim($_POST['username']);
     $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
     $email = trim($_POST['email']);
@@ -31,10 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: ' . BASE_URL . 'Admin/utilizadores_add.php?erro=bd');
     }
     $stmt->close();
+} else {
+    // GET request - show form below (no CSRF check needed for initial render)
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main class="conteudo">
         <h1 class="admin-title">Adicionar Novo Utilizador</h1>
         <form action="<?= BASE_URL ?>Admin/utilizadores_add.php" method="POST" class="admin-form">
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>

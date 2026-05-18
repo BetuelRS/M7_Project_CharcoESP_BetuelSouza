@@ -12,6 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+    $_SESSION['perfil_error'] = 'Erro de validação do formulário. Tente novamente.';
+    header('Location: ' . BASE_URL . 'auth/perfil.php');
+    exit;
+}
+
 $action = $_POST['action'] ?? '';
 $user_id = $_SESSION['user_id'];
 

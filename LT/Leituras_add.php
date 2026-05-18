@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config.php';
 include BASE_PATH . 'db.php';
+require_once BASE_PATH . 'includes/functions.php';
 
 if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
     header('Location: ' . BASE_URL . 'index.php?erro=admin');
@@ -9,15 +10,6 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
 
 // Busca sensores ativos com tipo para definir unidade automaticamente
 $sensores = $conn->query("SELECT cod_sensor, nome, tipo FROM sensores WHERE ativo = 1 ORDER BY nome");
-
-// Mapeamento de tipo para unidade padrão
-$unidades_tipo = [
-    'Temperatura' => '°C',
-    'Humidade' => '%',
-    'Luminosidade' => 'lux',
-    'Qualidade do Ar' => 'µg/m3',
-    'Nível da Água' => 'cm'
-];
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -54,6 +46,7 @@ $unidades_tipo = [
 
         <div class="form-container">
             <form action="Leituras_add_process.php" method="post" class="readings-form">
+                <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                 <div class="form-group">
                     <label for="cod_sensor">Sensor:</label>
                     <select name="cod_sensor" id="cod_sensor" required>
@@ -112,13 +105,7 @@ $unidades_tipo = [
         <?php include '../struct/footer.php'; ?>
     </footer>
     <script>
-        const unidadesPorTipo = {
-            'Temperatura': '°C',
-            'Humidade': '%',
-            'Luminosidade': 'lux',
-            'Qualidade do Ar': 'µg/m3',
-            'Nível da Água': 'cm'
-        };
+        const unidadesPorTipo = <?= json_encode(array_combine(tipos_ordenados(), array_map('tipo_para_unidade', tipos_ordenados()))) ?>;
         
         document.getElementById('cod_sensor').addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];

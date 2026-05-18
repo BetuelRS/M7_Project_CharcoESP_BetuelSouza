@@ -7,6 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
+if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+    $_SESSION['recover_error'] = 'Erro de validação do formulário. Tente novamente.';
+    header('Location: ' . BASE_URL . 'auth/recover.php');
+    exit();
+}
+
 $token = $_POST['token'] ?? '';
 $password = $_POST['password'] ?? '';
 $confirm_password = $_POST['confirm_password'] ?? '';

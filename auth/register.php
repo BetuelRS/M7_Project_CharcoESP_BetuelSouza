@@ -23,7 +23,7 @@ require_once __DIR__ . '/../config.php';
             <?php if (isset($_SESSION['register_error'])): ?>
                 <div class="auth-message error">
                     <i class="fas fa-exclamation-circle"></i>
-                    <?= $_SESSION['register_error'] ?>
+                    <?= htmlspecialchars($_SESSION['register_error']) ?>
                 </div>
                 <?php unset($_SESSION['register_error']); ?>
             <?php endif; ?>
@@ -31,12 +31,13 @@ require_once __DIR__ . '/../config.php';
             <?php if (isset($_SESSION['register_success'])): ?>
                 <div class="auth-message success">
                     <i class="fas fa-check-circle"></i>
-                    <?= $_SESSION['register_success'] ?>
+                    <?= htmlspecialchars($_SESSION['register_success']) ?>
                 </div>
                 <?php unset($_SESSION['register_success']); ?>
             <?php endif; ?>
 
             <form class="auth-form" action="<?= BASE_URL ?>auth/process_register.php" method="post">
+                <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                 <div class="form-group">
                     <label for="nome_completo">
                         <i class="fas fa-user"></i> Nome Completo

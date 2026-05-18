@@ -1,9 +1,16 @@
 <?php
 require_once __DIR__ . '/../config.php';
 include BASE_PATH . 'db.php';
+require_once BASE_PATH . 'includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ' . BASE_URL . 'LT/Leituras.php');
+    exit();
+}
+
+if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+    $_SESSION['erros_validacao'] = ['Erro de validação do formulário. Tente novamente.'];
+    header('Location: ' . BASE_URL . 'LT/Leituras_add.php?erro=validacao');
     exit();
 }
 
@@ -26,35 +33,7 @@ if ($valor_str === '' || $valor_str === null) {
 } elseif (!is_numeric($valor_str)) {
     $erros[] = "Valor deve ser um número";
 } else {
-    // Validação por unidade
-    switch ($unidade) {
-        case '%':
-            if ($valor < 0 || $valor > 100) {
-                $erros[] = "Percentagem deve estar entre 0 e 100%";
-            }
-            break;
-        case '°C':
-            if ($valor < -50 || $valor > 150) {
-                $erros[] = "Temperatura deve estar entre -50°C e 150°C";
-            }
-            break;
-        case 'cm':
-        case 'm':
-            if ($valor < 0) {
-                $erros[] = "Comprimento não pode ser negativo";
-            }
-            break;
-        case 'lux':
-            if ($valor < 0 || $valor > 100000) {
-                $erros[] = "Iluminância deve estar entre 0 e 100.000 lux";
-            }
-            break;
-        case 'µg/m3':
-            if ($valor < 0 || $valor > 500) {
-                $erros[] = "Concentração deve estar entre 0 e 500 µg/m³";
-            }
-            break;
-    }
+    $erros = array_merge($erros, validar_valor_unidade($valor, $unidade));
 }
 if (empty($unidade)) {
     $erros[] = "Unidade é obrigatória";

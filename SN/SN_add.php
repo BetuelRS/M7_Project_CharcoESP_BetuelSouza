@@ -31,6 +31,7 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
         </div>
 
         <form action="SN_add_process.php" method="post" class="sensor-form">
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="nome">Nome:</label>

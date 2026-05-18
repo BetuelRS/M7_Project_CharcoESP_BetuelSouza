@@ -3,10 +3,17 @@
 <?php
 require_once __DIR__ . '/../config.php';
 include BASE_PATH . 'db.php';
-?>
 
-<?php
+if (!isset($_SESSION['user_id']) || !$_SESSION['user_admin']) {
+    header('Location: ' . BASE_URL . 'index.php?erro=admin');
+    exit;
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+        header("Location: " . BASE_URL . "SN/SN_add.php?erro=csrf");
+        exit();
+    }
     $nome = $_POST["nome"];
     $tipo = $_POST["tipo"];
     $descricao = $_POST["descricao"] ?? '';
@@ -22,7 +29,8 @@ if ($stmt->execute()) {
         header("Location: " . BASE_URL . "SN/Sensores.php?msg=adicionado");
         exit();
     } else {
-        echo "Erro ao adicionar sensor: " . $conn->error;
+        header("Location: " . BASE_URL . "SN/SN_add.php?erro=bd");
+        exit();
     }
     $stmt->close();
 }
