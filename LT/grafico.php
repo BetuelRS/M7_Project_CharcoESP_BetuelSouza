@@ -14,34 +14,26 @@ $periods = [
 
 // Obter filtros
 $period = $_GET['period'] ?? '7days';
+$compare = $_GET['compare'] ?? '';
 $sensor_filter = isset($_GET['sensor']) && $_GET['sensor'] !== '' ? (int)$_GET['sensor'] : null;
 $date_start = $_GET['date_start'] ?? null;
 $date_end = $_GET['date_end'] ?? null;
 
 // Calcular intervalo de datas baseado no período
 $now = new DateTime();
-switch ($period) {
-    case 'today':
-        $start_date = $now->format('Y-m-d');
-        $end_date = $now->format('Y-m-d');
-        break;
-    case '7days':
-        $start_date = (clone $now)->modify('-6 days')->format('Y-m-d');
-        $end_date = $now->format('Y-m-d');
-        break;
-    case '30days':
-        $start_date = (clone $now)->modify('-29 days')->format('Y-m-d');
-        $end_date = $now->format('Y-m-d');
-        break;
-    case '90days':
-        $start_date = (clone $now)->modify('-89 days')->format('Y-m-d');
-        $end_date = $now->format('Y-m-d');
-        break;
-    case 'custom':
-        $start_date = $date_start ?: (clone $now)->modify('-6 days')->format('Y-m-d');
-        $end_date = $date_end ?: $now->format('Y-m-d');
-        break;
+function calcular_datas($period, $date_start, $date_end) {
+    $now = new DateTime();
+    switch ($period) {
+        case 'today': return [$now->format('Y-m-d'), $now->format('Y-m-d')];
+        case '7days': return [(clone $now)->modify('-6 days')->format('Y-m-d'), $now->format('Y-m-d')];
+        case '30days': return [(clone $now)->modify('-29 days')->format('Y-m-d'), $now->format('Y-m-d')];
+        case '90days': return [(clone $now)->modify('-89 days')->format('Y-m-d'), $now->format('Y-m-d')];
+        case 'custom': return [$date_start ?: (clone $now)->modify('-6 days')->format('Y-m-d'), $date_end ?: $now->format('Y-m-d')];
+        default: return [(clone $now)->modify('-6 days')->format('Y-m-d'), $now->format('Y-m-d')];
+    }
 }
+[$start_date, $end_date] = calcular_datas($period, $date_start, $date_end);
+[$compare_start, $compare_end] = calcular_datas($compare, $date_start, $date_end);
 
 // Buscar sensores para o filtro
 $sensors = [];
@@ -166,6 +158,34 @@ foreach ($tipos_to_query as $tipo) {
     ];
     $stmt->close();
 }
+
+// Buscar dados de comparação
+$compare_data = [];
+if ($compare && $compare_start && $compare_end) {
+    $tipos_to_query_comp = $filter_tipo ? [$filter_tipo] : $tipos;
+    foreach ($tipos_to_query_comp as $tipo) {
+        $sql = "SELECT l.valor, l.data_hora, l.unidade, s.nome
+                FROM leituras l INNER JOIN sensores s ON l.cod_sensor = s.cod_sensor
+                WHERE s.tipo = ? AND DATE(l.data_hora) BETWEEN ? AND ?";
+        if ($sensor_filter) $sql .= " AND l.cod_sensor = ?";
+        $sql .= " ORDER BY l.data_hora ASC";
+        $params = [$tipo, $compare_start, $compare_end];
+        $types = 'sss';
+        if ($sensor_filter) { $params[] = $sensor_filter; $types .= 'i'; }
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = ['x' => $row['data_hora'], 'y' => (float)$row['valor'], 'sensor' => $row['nome'], 'unidade' => $row['unidade']];
+        }
+        $stmt->close();
+        if (!empty($data)) {
+            $compare_data[$tipo] = ['data' => $data, 'unidade' => $data[0]['unidade'], 'count' => count($data)];
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -212,6 +232,16 @@ foreach ($tipos_to_query as $tipo) {
                         <select name="period" id="periodSelect">
                             <?php foreach ($periods as $key => $label): ?>
                                 <option value="<?= $key ?>" <?= ($period === $key) ? 'selected' : '' ?>><?= $label ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label><i class="fas fa-scale-balanced"></i> Comparar com</label>
+                        <select name="compare">
+                            <option value="">Sem comparação</option>
+                            <?php foreach ($periods as $key => $label): ?>
+                                <option value="<?= $key ?>" <?= ($compare === $key) ? 'selected' : '' ?>><?= $label ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -344,6 +374,8 @@ foreach ($tipos_to_query as $tipo) {
 
         // Dados dos gráficos
         const chartData = <?= json_encode($chart_data) ?>;
+        const compareData = <?= json_encode($compare_data) ?>;
+        const compareLabel = 'Período anterior';
         const uniqueSensors = {};
         let colorIndex = 0;
 
@@ -377,7 +409,7 @@ foreach ($tipos_to_query as $tipo) {
             });
         }
 
-        // Criar gráficos para cada tipo
+            // Criar gráficos para cada tipo
         Object.keys(chartData).forEach(function(tipo) {
             const data = chartData[tipo].data;
             if (!data || data.length === 0) return;
@@ -385,7 +417,7 @@ foreach ($tipos_to_query as $tipo) {
             const canvas = document.getElementById('chart-' + tipo);
             if (!canvas) return;
 
-            // Agrupar dados por sensor
+            // Agrupar dados do período principal por sensor
             const sensorDatasets = {};
             data.forEach(function(point) {
                 if (!sensorDatasets[point.sensor]) {
@@ -404,6 +436,33 @@ foreach ($tipos_to_query as $tipo) {
                 }
                 sensorDatasets[point.sensor].data.push({ x: point.x, y: point.y });
             });
+
+            // Adicionar dados de comparação se existirem
+            const compData = compareData[tipo] ? compareData[tipo].data : null;
+            if (compData && compData.length > 0) {
+                const compSensorGroups = {};
+                compData.forEach(function(point) {
+                    if (!compSensorGroups[point.sensor]) {
+                        const color = uniqueSensors[point.sensor] ? uniqueSensors[point.sensor].color : sensorColors[0];
+                        compSensorGroups[point.sensor] = {
+                            label: compareLabel + ' - ' + point.sensor,
+                            data: [],
+                            borderColor: color.border,
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            fill: false,
+                            pointRadius: 0,
+                            pointHoverRadius: 4
+                        };
+                    }
+                    compSensorGroups[point.sensor].data.push({ x: point.x, y: point.y });
+                });
+                Object.values(compSensorGroups).forEach(function(ds) {
+                    sensorDatasets[ds.label] = ds;
+                });
+            }
 
             new Chart(canvas, {
                 type: 'line',

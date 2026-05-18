@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT cod_utilizador, username, email, nome_completo, ADMIN, preferencias, created_at FROM utilizadores WHERE cod_utilizador = ?");
+$stmt = $conn->prepare("SELECT cod_utilizador, username, email, nome_completo, ADMIN, preferencias, totp_secret, created_at FROM utilizadores WHERE cod_utilizador = ?");
 $stmt->bind_param('i', $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -162,6 +162,10 @@ unset($_SESSION['perfil_success'], $_SESSION['perfil_error']);
                         <div class="info-item">
                             <span class="info-label">Membro desde:</span>
                             <span class="info-value"><?= $user['created_at'] ? date('d/m/Y', strtotime($user['created_at'])) : '-' ?></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">2FA:</span>
+                            <span class="info-value"><a href="totp_setup.php" style="color:#3b82f6;"><?= $user['totp_secret'] ? '✅ Ativo' : '⚙️ Configurar' ?></a></span>
                         </div>
                     </div>
                 </div>

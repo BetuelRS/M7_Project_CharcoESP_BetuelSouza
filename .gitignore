@@ -28,6 +28,11 @@ config_local.php
 # Compiled/Generated
 *.php~
 
+# Composer
+vendor/
+composer.phar
+composer.lock
+
 # OS
 Thumbs.db
 

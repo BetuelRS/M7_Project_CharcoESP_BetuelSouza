@@ -35,6 +35,9 @@ if (!isset($_SESSION['user_id'])) {
             <a href="<?= BASE_URL ?>LT/leituras_add.php" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Adicionar Leitura
             </a>
+            <a href="<?= BASE_URL ?>LT/importar.php" class="btn btn-primary" style="background:#8b5cf6;">
+                <i class="fas fa-upload"></i> Importar
+            </a>
             <?php endif; ?>
             <a href="<?= BASE_URL ?>LT/leituras_todas.php" class="btn btn-secondary">
                 <i class="fas fa-list"></i> Ver Todas

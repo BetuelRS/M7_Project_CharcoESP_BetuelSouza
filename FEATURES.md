@@ -14,25 +14,25 @@
 
 ## Exportação e Dados
 
-- [ ] **PDF real (Dompdf)** — exportar relatórios como PDF verdadeiro (substituir `window.print()`)
+- [x] **PDF real (Dompdf)** — exportar relatórios como PDF verdadeiro (instalado via Composer, substitui window.print())
 - [x] **API REST** — endpoint JSON para consulta programática de leituras e sensores (api/index.php, autenticado via Bearer token)
-- [ ] **Import CSV/JSON** — carregar leituras em massa a partir de ficheiro
-- [ ] **Comparação de períodos** — nos gráficos, comparar mês-a-mês ou ano-a-ano
+- [x] **Import CSV/JSON** — carregar leituras em massa a partir de ficheiro (LT/importar.php + processar_importacao.php)
+- [x] **Comparação de períodos** — nos gráficos, selecionar período de comparação para sobreposição (grafico.php)
 
 ## Segurança e Admin
 
 - [x] **Log de Auditoria** — registar quem criou/editou/eliminou cada sensor, leitura e utilizador (Admin/auditoria.php)
 - [x] **API Keys** — gerar e gerir chaves de API para integrações externas (Admin/api_keys.php)
-- [ ] **2FA / TOTP** — autenticação de dois fatores no login
+- [x] **2FA / TOTP** — autenticação de dois fatores no login (auth/totp_setup.php + auth/totp_verify.php)
 - [x] **Gestão de Sessões** — registo de acessos visível no perfil do utilizador
 - [ ] **Rate limiting no login** — bloquear temporariamente após N tentativas falhadas
 
 ## Infraestrutura
 
 - [x] **.env + Composer** — variáveis de ambiente (DB, APP_URL, SESSION_LIFETIME, etc.) + autoload via includes/functions.php
-- [ ] **Docker** — Dockerfile + docker-compose para ambiente dev/prod padronizado
-- [ ] **GitHub Actions CI** — pipeline automática que corre lint e testes em cada push
-- [ ] **PHPUnit** — testes unitários para `includes/functions.php` e CRUDs
+- [x] **Docker** — Dockerfile + docker-compose para ambiente dev/prod padronizado
+- [x] **GitHub Actions CI** — pipeline automática que corre lint e testes em cada push (.github/workflows/ci.yml)
+- [x] **PHPUnit** — testes unitários para `includes/functions.php` (tests/FunctionsTest.php, 4 testes, 24 asserções)
 - [ ] **PWA offline** — service worker + manifest para o dashboard funcionar offline
 
 ## IoT e Tempo Real

@@ -86,6 +86,59 @@ function redirect($url) {
     exit();
 }
 
+function totp_gerar_secreto() {
+    $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    $secret = '';
+    for ($i = 0; $i < 32; $i++) {
+        $secret .= $chars[random_int(0, 31)];
+    }
+    return $secret;
+}
+
+function totp_calcular($secret, $time = null) {
+    if ($time === null) $time = time();
+    $counter = pack('N*', 0) . pack('N*', (int)($time / 30));
+    $secret_decoded = totp_base32_decode($secret);
+    $hash = hash_hmac('sha1', $counter, $secret_decoded, true);
+    $offset = ord($hash[19]) & 0xf;
+    $code = (
+        ((ord($hash[$offset]) & 0x7f) << 24) |
+        ((ord($hash[$offset + 1]) & 0xff) << 16) |
+        ((ord($hash[$offset + 2]) & 0xff) << 8) |
+        (ord($hash[$offset + 3]) & 0xff)
+    ) % 1000000;
+    return str_pad($code, 6, '0', STR_PAD_LEFT);
+}
+
+function totp_verificar($secret, $code) {
+    $time = time();
+    for ($i = -1; $i <= 1; $i++) {
+        if (hash_equals(totp_calcular($secret, $time + $i * 30), $code)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function totp_base32_decode($input) {
+    $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    $input = strtoupper($input);
+    $output = '';
+    $buffer = 0;
+    $bitsLeft = 0;
+    for ($i = 0; $i < strlen($input); $i++) {
+        $val = strpos($alphabet, $input[$i]);
+        if ($val === false) continue;
+        $buffer = ($buffer << 5) | $val;
+        $bitsLeft += 5;
+        if ($bitsLeft >= 8) {
+            $output .= chr(($buffer >> ($bitsLeft - 8)) & 0xff);
+            $bitsLeft -= 8;
+        }
+    }
+    return $output;
+}
+
 function registrar_auditoria($conn, $utilizador_id, $acao, $entidade, $entidade_id, $detalhes = null) {
     $stmt = $conn->prepare("INSERT INTO auditoria (utilizador_id, acao, entidade, entidade_id, detalhes, ip) VALUES (?, ?, ?, ?, ?, ?)");
     $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';

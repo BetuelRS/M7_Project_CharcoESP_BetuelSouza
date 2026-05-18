@@ -23,7 +23,7 @@ if (empty($username) || empty($password)) {
 }
 
 // Busca o utilizador por username ou email
-$sql = "SELECT cod_utilizador, username, password, nome_completo, ADMIN FROM utilizadores WHERE username = ? OR email = ?";
+$sql = "SELECT cod_utilizador, username, password, nome_completo, ADMIN, totp_secret FROM utilizadores WHERE username = ? OR email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ss", $username, $username);
 $stmt->execute();
@@ -46,6 +46,13 @@ if ($result->num_rows === 1) {
             $stmt = $conn->prepare("UPDATE utilizadores SET password = ? WHERE cod_utilizador = ?");
             $stmt->bind_param("si", $hashed, $user['cod_utilizador']);
             $stmt->execute();
+        }
+
+        // Verificar 2FA
+        if (!empty($user['totp_secret'])) {
+            $_SESSION['totp_user_id'] = $user['cod_utilizador'];
+            header('Location: ' . BASE_URL . 'auth/totp_verify.php');
+            exit();
         }
 
         // Login bem-sucedido

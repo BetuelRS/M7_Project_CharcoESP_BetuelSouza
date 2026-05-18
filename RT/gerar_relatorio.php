@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Dompdf\Dompdf;
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(403);
@@ -33,22 +36,11 @@ function outputJSON($data, $filename) {
 }
 
 function outputPDF($html, $title, $filename) {
-    header('Content-Type: text/html; charset=utf-8');
-    header('Content-Disposition: inline; filename="' . $filename . '"');
-    echo '<!DOCTYPE html>
-    <html>
-    <head>
-        <title>' . $title . ' - DashBoard ESP</title>
-        <script>
-        window.onload = function() {
-            setTimeout(function() {
-                window.print();
-            }, 500);
-        };
-        </script>
-    </head>
-    <body onload="window.print()">' . $html . '</body>
-    </html>';
+    $dompdf = new Dompdf();
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->loadHtml($html, 'UTF-8');
+    $dompdf->render();
+    $dompdf->stream($filename, ['Attachment' => false]);
     exit;
 }
 
